@@ -1,0 +1,31 @@
+package serializer
+
+import (
+	"github.com/gofiber/fiber/v2"
+)
+
+type AuthDataLogin struct {
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required"`
+}
+
+type AuthDataRegister struct {
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required"`
+}
+
+type AuthDataRefresh struct {
+	RefreshToken string `json:"refreshToken" validate:"required"`
+}
+
+func GetSerializedAuthRefreshData(c *fiber.Ctx) (AuthDataRefresh, error) {
+	return GetSerializedBodyData[AuthDataRefresh](c)
+}
+
+func GetSerializedAuthLoginData(c *fiber.Ctx) (AuthDataLogin, error) {
+	return GetSerializedBodyData[AuthDataLogin](c)
+}
+
+func GetSerializedAuthRegisterData(c *fiber.Ctx) (AuthDataRegister, error) {
+	return GetSerializedBodyData[AuthDataRegister](c)
+}
