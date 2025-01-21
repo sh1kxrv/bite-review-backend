@@ -32,7 +32,7 @@ func (h *UserHandler) GetMeHandler(c *fiber.Ctx) error {
 		return helper.SendError(c, err, errors.ValidationError)
 	}
 
-	user, err := h.UserRepo.FindByID(c.Context(), parsedId)
+	user, err := h.UserRepo.GetEntityByID(c.Context(), parsedId)
 	if err != nil {
 		return helper.SendError(c, err, errors.MakeRepositoryError("User"))
 	}

@@ -121,7 +121,7 @@ func (h *AuthHandler) Register(c *fiber.Ctx) error {
 		return helper.SendError(c, err, errors.CryptoError)
 	}
 
-	user, err := h.UserRepo.CreateUser(c.Context(), &schema.User{
+	user, err := h.UserRepo.CreateEntity(c.Context(), &schema.User{
 		Email:    v.Email,
 		Password: hashedPwd,
 		Role:     "user",
@@ -157,7 +157,7 @@ func (h *AuthHandler) Refresh(c *fiber.Ctx) error {
 		return helper.SendError(c, err, errors.ParseIDError)
 	}
 
-	user, err := h.UserRepo.FindByID(c.Context(), parsedId)
+	user, err := h.UserRepo.GetEntityByID(c.Context(), parsedId)
 	if err != nil {
 		return helper.SendError(c, err, errors.EntityNotExists)
 	}

@@ -14,22 +14,15 @@ import (
 const UserCollection = "users"
 
 type UserRepository struct {
+	CrudRepository[schema.User]
 	Collection *mongo.Collection
 }
 
 func NewUserRepository() *UserRepository {
 	return &UserRepository{
-		Collection: database.GetCollection(UserCollection),
+		Collection:     database.GetCollection(UserCollection),
+		CrudRepository: NewCrudRepository[schema.User](UserCollection),
 	}
-}
-
-func (r *UserRepository) CreateUser(ctx context.Context, user *schema.User) (*schema.User, error) {
-	user.ID = primitive.NewObjectID()
-	_, err := r.Collection.InsertOne(ctx, user)
-	if err != nil {
-		return nil, err
-	}
-	return user, nil
 }
 
 func (r *UserRepository) FindByEmail(ctx context.Context, email string) (*schema.User, error) {
@@ -41,29 +34,8 @@ func (r *UserRepository) FindByEmail(ctx context.Context, email string) (*schema
 	return &user, nil
 }
 
-func (r *UserRepository) UpdateBSON(ctx context.Context, filter bson.M, update bson.M) error {
-	_, err := r.Collection.UpdateOne(ctx, filter, update)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 func (r *UserRepository) UpdateUser(ctx context.Context, user *schema.User) error {
-	_, err := r.Collection.UpdateOne(ctx, bson.M{"_id": user.ID}, bson.M{"$set": user})
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (r *UserRepository) FindByID(ctx context.Context, id primitive.ObjectID) (*schema.User, error) {
-	var user schema.User
-	err := r.Collection.FindOne(ctx, bson.M{"_id": id}).Decode(&user)
-	if err != nil {
-		return nil, err
-	}
-	return &user, nil
+	return r.UpdateBSON(ctx, bson.M{"_id": user.ID}, bson.M{"$set": user})
 }
 
 func (r *UserRepository) UpdateLastSeen(ctx context.Context, id primitive.ObjectID) error {
