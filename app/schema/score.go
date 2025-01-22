@@ -7,7 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-type Score struct {
+type Estimate struct {
 	ID          primitive.ObjectID `bson:"_id" json:"id"`
 	ReviewID    primitive.ObjectID `bson:"reviewId" json:"reviewId"`
 	Name        string             `bson:"name" json:"name"`
@@ -16,11 +16,11 @@ type Score struct {
 	CreatedAt   time.Time          `bson:"createdAt" json:"createdAt"`
 }
 
-func (s *Score) MarshalBSON() ([]byte, error) {
+func (s *Estimate) MarshalBSON() ([]byte, error) {
 	if s.CreatedAt.IsZero() {
 		s.CreatedAt = time.Now()
 	}
 
-	type my Score
+	type my Estimate
 	return bson.Marshal((*my)(s))
 }
