@@ -19,6 +19,7 @@ type User struct {
 	CreatedAt  time.Time           `bson:"createdAt" json:"createdAt"`
 	UpdatedAt  time.Time           `bson:"updatedAt" json:"updatedAt"`
 	Role       enum.Role           `bson:"role" json:"role"`
+	IsVerified bool                `bson:"isVerified" json:"isVerified"`
 }
 
 func (u *User) MarshalBSON() ([]byte, error) {
