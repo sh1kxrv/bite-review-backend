@@ -73,14 +73,21 @@ func InitViper() error {
 func InitRouter(app *fiber.App) {
 	// Repositories
 	userRepository := repository.NewUserRepository()
+	restaurantRepository := repository.NewRestaurantRepository()
+	reviewRepository := repository.NewReviewRepository()
+	scoreRepository := repository.NewScoreRepository()
 
 	// Handler's
 	userHandler := handler.NewUserHandler(userRepository)
 	authHandler := handler.NewAuthHandler(userRepository)
+	restaurantHandler := handler.NewRestaurantHandler(restaurantRepository)
+	reviewHandler := handler.NewReviewHandler(reviewRepository)
+	scoreHandler := handler.NewScoreHandler(scoreRepository)
 
 	// Router
 	appRouter := router.NewAppRouter(
-		userHandler, authHandler,
+		userHandler, authHandler, restaurantHandler,
+		reviewHandler, scoreHandler,
 	)
 
 	appRouter.RegisterRoutes(app)

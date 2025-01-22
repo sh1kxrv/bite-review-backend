@@ -7,17 +7,26 @@ import (
 )
 
 type AppRouter struct {
-	UserHandler *handler.UserHandler
-	AuthHandler *handler.AuthHandler
+	UserHandler       *handler.UserHandler
+	AuthHandler       *handler.AuthHandler
+	RestaurantHandler *handler.RestaurantHandler
+	ReviewHandler     *handler.ReviewHandler
+	ScoreHandler      *handler.ScoreHandler
 }
 
 func NewAppRouter(
 	userHandler *handler.UserHandler,
 	authHandler *handler.AuthHandler,
+	restaurantHandler *handler.RestaurantHandler,
+	reviewHandler *handler.ReviewHandler,
+	scoreHandler *handler.ScoreHandler,
 ) *AppRouter {
 	return &AppRouter{
-		UserHandler: userHandler,
-		AuthHandler: authHandler,
+		UserHandler:       userHandler,
+		AuthHandler:       authHandler,
+		RestaurantHandler: restaurantHandler,
+		ReviewHandler:     reviewHandler,
+		ScoreHandler:      scoreHandler,
 	}
 }
 
@@ -31,4 +40,7 @@ func (r *AppRouter) RegisterRoutes(app *fiber.App) {
 
 	r.AuthHandler.RegisterRoutes(v1)
 	r.UserHandler.RegisterRoutes(v1)
+	r.RestaurantHandler.RegisterRoutes(v1)
+	r.ReviewHandler.RegisterRoutes(v1)
+	r.ScoreHandler.RegisterRoutes(v1)
 }

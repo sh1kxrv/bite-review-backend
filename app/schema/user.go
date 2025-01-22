@@ -10,16 +10,17 @@ import (
 
 type User struct {
 	ID         primitive.ObjectID  `bson:"_id" json:"id"`
-	ProfileID  *primitive.ObjectID `bson:"profileId" json:"profileId"`
 	Email      string              `bson:"email" json:"email"`
-	Username   string              `bson:"username" json:"username"`
+	Username   *string             `bson:"username" json:"username"`
+	FirstName  string              `bson:"firstName" json:"firstName"`
+	LastName   string              `bson:"lastName" json:"lastName"`
 	Password   string              `bson:"password" json:"-"`
-	TelegramID *string             `bson:"telegramId" json:"telegramId"`
+	IsVerified bool                `bson:"isVerified" json:"isVerified"`
+	VerifiedBy *primitive.ObjectID `bson:"verifiedBy" json:"verifiedBy"`
 	LastSeen   time.Time           `bson:"lastSeen" json:"lastSeen"`
 	CreatedAt  time.Time           `bson:"createdAt" json:"createdAt"`
 	UpdatedAt  time.Time           `bson:"updatedAt" json:"updatedAt"`
 	Role       enum.Role           `bson:"role" json:"role"`
-	IsVerified bool                `bson:"isVerified" json:"isVerified"`
 }
 
 func (u *User) MarshalBSON() ([]byte, error) {
