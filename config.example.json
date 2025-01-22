@@ -1,7 +1,7 @@
 {
   "database": {
     "url": "mongodb://localhost:27017",
-    "name": "zxc"
+    "name": "bitereview"
   },
   "jwt": {
     "secret": "",

@@ -61,11 +61,12 @@ func (rh *RestaurantHandler) CreateRestaurant(c *fiber.Ctx) error {
 	restourant := &schema.Restaurant{
 		ID:          primitive.NewObjectID(),
 		Name:        data.Name,
-		Description: data.Description,
+		Description: *data.Description,
 		Address:     data.Address,
-		Location:    data.Location,
+		City:        data.City,
 		Country:     data.Country,
 		Site:        data.Site,
+		KitchenType: data.KitchenType,
 		IsVerified:  false,
 		Metadata:    data.Metadata,
 	}
@@ -75,7 +76,7 @@ func (rh *RestaurantHandler) CreateRestaurant(c *fiber.Ctx) error {
 
 	rh.RestaurantRepo.CreateEntity(withTimeout, restourant)
 
-	return nil
+	return helper.SendSuccess(c, restourant)
 }
 
 func (rh *RestaurantHandler) VerifyRestaurant(c *fiber.Ctx) error {

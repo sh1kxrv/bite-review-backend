@@ -11,10 +11,11 @@ type Restaurant struct {
 	ID          primitive.ObjectID `bson:"_id" json:"id"`
 	Name        string             `bson:"name" json:"name"`
 	Address     string             `bson:"address" json:"address"`
-	Location    string             `bson:"location" json:"location"`
+	City        string             `bson:"city" json:"city"`
 	Description string             `bson:"description" json:"description"`
 	Country     string             `bson:"country" json:"country"`
 	Site        string             `bson:"site" json:"site"`
+	KitchenType []string           `bson:"kitchenType" json:"kitchenType"`
 	IsVerified  bool               `bson:"isVerified" json:"isVerified"`
 	Metadata    *map[string]any    `bson:"metadata" json:"metadata"`
 	CreatedAt   time.Time          `bson:"createdAt" json:"createdAt"`
