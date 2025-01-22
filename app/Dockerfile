@@ -1,15 +1,16 @@
-FROM golang:1.22.1-alpine AS builder
+FROM golang:1.23.2-alpine AS builder
 
-WORKDIR /usr/src/app
+WORKDIR /usr/app
 
 COPY ./go.mod ./go.sum ./
 RUN go mod download
+RUN go mod tidy
 
-COPY ./entrypoint.sh /usr/src/app/entrypoint.sh
+COPY ./entrypoint.sh /usr/app/entrypoint.sh
 RUN chmod +x entrypoint.sh
 
 COPY . .
 
 ENV CGO_ENABLED=0 GOOS=linux GOARCH=amd64
 
-ENTRYPOINT ["sh", "/usr/src/app/entrypoint.sh"]
+ENTRYPOINT ["sh", "/usr/app/entrypoint.sh"]
