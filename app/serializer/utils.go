@@ -6,6 +6,7 @@ import (
 	"bytes"
 
 	"github.com/goccy/go-json"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -42,4 +43,23 @@ func GetJwtUserLocal(c *fiber.Ctx) (utils.JwtClaims, error) {
 	}
 
 	return parsedLocalUser, nil
+}
+
+func GetJwtUserLocalWithParsedID(c *fiber.Ctx) (utils.JwtClaims, primitive.ObjectID, error) {
+	localUser := c.Locals("user")
+	if localUser == nil {
+		return utils.JwtClaims{}, primitive.NilObjectID, fiber.NewError(fiber.StatusUnauthorized, "Unauthorized")
+	}
+
+	parsedLocalUser, ok := localUser.(utils.JwtClaims)
+	if !ok {
+		return utils.JwtClaims{}, primitive.NilObjectID, fiber.NewError(fiber.StatusUnauthorized, "Unauthorized")
+	}
+
+	parsedID, err := primitive.ObjectIDFromHex(parsedLocalUser.ID)
+	if err != nil {
+		return utils.JwtClaims{}, primitive.NilObjectID, fiber.NewError(fiber.StatusUnauthorized, "Unauthorized")
+	}
+
+	return parsedLocalUser, parsedID, nil
 }
