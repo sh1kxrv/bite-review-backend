@@ -3,6 +3,7 @@ package handler
 import (
 	"bitereview/app/config"
 	"bitereview/app/crypto"
+	"bitereview/app/enum"
 	"bitereview/app/errors"
 	"bitereview/app/helper"
 	"bitereview/app/repository"
@@ -122,9 +123,10 @@ func (h *AuthHandler) Register(c *fiber.Ctx) error {
 	}
 
 	user, err := h.UserRepo.CreateEntity(c.Context(), &schema.User{
+		ID:       primitive.NewObjectID(),
 		Email:    v.Email,
 		Password: hashedPwd,
-		Role:     "user",
+		Role:     enum.RoleCritic,
 		LastSeen: time.Now(),
 	})
 
