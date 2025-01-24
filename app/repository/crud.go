@@ -43,3 +43,7 @@ func (r *CrudRepository[T]) UpdateBSON(ctx context.Context, filter bson.M, updat
 	}
 	return nil
 }
+
+func (r *CrudRepository[T]) GetAll(ctx context.Context, filter bson.M, limit, offset int64) ([]T, error) {
+
+}

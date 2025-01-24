@@ -6,6 +6,7 @@ import (
 	"bitereview/app/handler"
 	"bitereview/app/repository"
 	"bitereview/app/router"
+	"bitereview/app/service"
 	"context"
 	"os"
 	"os/signal"
@@ -77,12 +78,16 @@ func InitRouter(app *fiber.App) {
 	reviewRepository := repository.NewReviewRepository()
 	estimateRepository := repository.NewEstimateRepository()
 
-	// Handler's
+	// Services
+	estimateService := service.NewEstimateService(estimateRepository)
+	restaurantService := service.NewRestaurantService(restaurantRepository)
+
+	// Handlers
 	userHandler := handler.NewUserHandler(userRepository)
 	authHandler := handler.NewAuthHandler(userRepository)
-	restaurantHandler := handler.NewRestaurantHandler(restaurantRepository)
+	restaurantHandler := handler.NewRestaurantHandler(restaurantService)
 	reviewHandler := handler.NewReviewHandler(reviewRepository)
-	estimateHandler := handler.NewEstimateHandler(estimateRepository)
+	estimateHandler := handler.NewEstimateHandler(estimateService)
 
 	// Router
 	appRouter := router.NewAppRouter(

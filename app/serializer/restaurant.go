@@ -10,6 +10,7 @@ type CreateRestaurantDTO struct {
 	Country     string          `json:"country"`
 	Site        string          `json:"site"`
 	KitchenType []string        `json:"kitchenType"`
+	Images      []string        `json:"images"`
 	Metadata    *map[string]any `json:"metadata"`
 }
 

@@ -2,24 +2,23 @@ package handler
 
 import (
 	"bitereview/app/middleware"
-	"bitereview/app/repository"
+	"bitereview/app/service"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type EstimateHandler struct {
-	EstimateRepo *repository.EstimateRepository
+	EstimateService *service.EstimateService
 }
 
-func NewEstimateHandler(estimateRepo *repository.EstimateRepository) *EstimateHandler {
+func NewEstimateHandler(estimateService *service.EstimateService) *EstimateHandler {
 	return &EstimateHandler{
-		EstimateRepo: estimateRepo,
+		EstimateService: estimateService,
 	}
 }
 
-// TODO
 func (sh *EstimateHandler) GetEstimatesByReviewId(c *fiber.Ctx) error {
-	return nil
+	return sh.EstimateService.GetEstimatesByReviewId(c)
 }
 
 // TODO
