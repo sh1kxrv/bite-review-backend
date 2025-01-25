@@ -104,23 +104,19 @@ func (h *AuthService) Login(email, password string) (*JwtPair, *helper.ServiceEr
 
 func (h *AuthService) Register(authData *serializer.AuthDataRegister) (*JwtPair, *helper.ServiceError) {
 	ctx, cancel := utils.CreateContextTimeout(15)
+	defer cancel()
 
 	_, err := h.userRepo.FindByEmail(ctx, authData.Email)
 	if err == nil {
 		return nil, helper.NewServiceError(err, errors.EntityAlreadyExists)
 	}
 
-	cancel()
-
 	hashedPwd, err := crypto.HashPassword(authData.Password)
 	if err != nil {
 		return nil, helper.NewServiceError(err, errors.CryptoError)
 	}
 
-	ctxCreate, cancelCreate := utils.CreateContextTimeout(15)
-	defer cancelCreate()
-
-	user, err := h.userRepo.CreateEntity(ctxCreate, &schema.User{
+	user, err := h.userRepo.CreateEntity(ctx, &schema.User{
 		ID:       primitive.NewObjectID(),
 		Email:    authData.Email,
 		Password: hashedPwd,

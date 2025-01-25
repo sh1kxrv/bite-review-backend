@@ -42,14 +42,13 @@ func (es *EstimateService) GetEstimatesByReviewId(
 func (es *EstimateService) AddEstimate(
 	reviewId primitive.ObjectID, userId primitive.ObjectID, data *serializer.CreateEstimateDTO,
 ) (*schema.Estimate, *helper.ServiceError) {
-	timeoutCtx, cancel := utils.CreateContextTimeout(15)
+	timeoutCtx, cancel := utils.CreateContextTimeout(30)
+	defer cancel()
 
 	_, err := es.reviewRepo.GetEntityByID(timeoutCtx, reviewId)
 	if err == nil {
 		return nil, helper.NewServiceError(err, errors.ValidationError)
 	}
-
-	cancel()
 
 	estimate := &schema.Estimate{
 		ID:          primitive.NewObjectID(),
@@ -59,10 +58,7 @@ func (es *EstimateService) AddEstimate(
 		Description: data.Description,
 	}
 
-	withTimeout, cancel := utils.CreateContextTimeout(15)
-	defer cancel()
-
-	_, err = es.estimateRepo.CreateEntity(withTimeout, estimate)
+	_, err = es.estimateRepo.CreateEntity(timeoutCtx, estimate)
 	if err != nil {
 		return nil, helper.NewServiceError(err, errors.MakeRepositoryError("Estimate"))
 	}

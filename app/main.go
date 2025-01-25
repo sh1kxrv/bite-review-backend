@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bitereview/app/cache/memcache"
 	"bitereview/app/config"
 	"bitereview/app/database"
 	"bitereview/app/handler"
@@ -21,6 +22,8 @@ import (
 )
 
 func main() {
+	memoryCacheContext, cancel := context.WithCancel(context.Background())
+
 	if err := InitViper(); err != nil {
 		logrus.Fatalf("Failed to initialize config: %s", err.Error())
 	}
@@ -33,6 +36,8 @@ func main() {
 
 	database.InitMongo(cfg)
 
+	memoryCache := InitMemoryCache(memoryCacheContext)
+
 	if err := database.MongoClient.Ping(context.TODO(), nil); err != nil {
 		logrus.Fatalf("Failed to ping mongodb: %s", err.Error())
 	}
@@ -43,6 +48,10 @@ func main() {
 		JSONDecoder:  json.Unmarshal,
 	})
 
+	app.Use(func(c *fiber.Ctx) error {
+		c.Locals("memoryCache", memoryCache)
+		return c.Next()
+	})
 	app.Use(cors.New())
 
 	InitRouter(app)
@@ -58,10 +67,18 @@ func main() {
 			logrus.Fatalf("Error disconnecting from MongoDB: %v", err)
 		}
 		logrus.Debug("Connection to MongoDB closed.")
+
+		logrus.Debug("Canceling memory cache context...")
+		cancel()
+
 		os.Exit(0)
 	}()
 
 	logrus.Fatal(app.Listen(":3000"))
+}
+
+func InitMemoryCache(ctx context.Context) *memcache.MemoryCache {
+	return memcache.NewMemoryCache(ctx)
 }
 
 func InitViper() error {
