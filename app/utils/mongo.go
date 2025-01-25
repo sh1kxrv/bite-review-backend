@@ -12,7 +12,7 @@ func CursoredFind[T any](collection *mongo.Collection, context context.Context, 
 	options.SetLimit(limit)
 	options.SetSkip(offset)
 
-	cursor, err := collection.Find(context, filter)
+	cursor, err := collection.Find(context, filter, options)
 
 	if err != nil {
 		return nil, err

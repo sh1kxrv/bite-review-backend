@@ -10,6 +10,7 @@ import (
 	"bitereview/app/service"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/sirupsen/logrus"
 )
 
 type RestaurantHandler struct {
@@ -24,6 +25,9 @@ func NewRestaurantHandler(service *service.RestaurantService) *RestaurantHandler
 
 func (rh *RestaurantHandler) GetRestaurants(c *fiber.Ctx) error {
 	limit, offset := param.GetLimitOffset(c)
+
+	logrus.Debugf("Get restaurants limit: %d, offset: %d", limit, offset)
+
 	restaurants, serr := rh.RestaurantService.GetRestaurants(limit, offset)
 	return helper.SendSomething(c, &restaurants, serr)
 }
@@ -64,7 +68,7 @@ func (rh *RestaurantHandler) UnverifyRestaurant(c *fiber.Ctx) error {
 }
 
 func (rh *RestaurantHandler) registerModeratorRoutes(g fiber.Router) {
-	moderRoute := g.Group("/moderator/restaurant", middleware.JwtAuthMiddleware, middleware.CreateRoleMiddleware(enum.RoleModerator))
+	moderRoute := g.Group("/moderator/restaurant", middleware.JwtAuthMiddleware, middleware.CreateRoleMiddleware(enum.StaffRoles...))
 	moderRoute.Patch("/:id/verify", rh.VerifyRestaurant)
 	moderRoute.Patch("/:id/unverify", rh.UnverifyRestaurant)
 }
