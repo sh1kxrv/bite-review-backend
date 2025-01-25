@@ -48,10 +48,7 @@ func main() {
 		JSONDecoder:  json.Unmarshal,
 	})
 
-	app.Use(func(c *fiber.Ctx) error {
-		c.Locals("memoryCache", memoryCache)
-		return c.Next()
-	})
+	app.Use(memcache.MemoryCacheMiddleware(memoryCache))
 	app.Use(cors.New())
 
 	InitRouter(app)
