@@ -5,14 +5,15 @@ import (
 	"bitereview/app/errors"
 	"bitereview/app/helper"
 	"bitereview/app/utils"
+	"slices"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func CreateRoleMiddleware(role enum.Role) func(c *fiber.Ctx) error {
+func CreateRoleMiddleware(roles ...enum.Role) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		user, ok := c.Locals("user").(utils.JwtClaims)
-		if !ok || user.Role != role {
+		if !ok || !slices.Contains(roles, user.Role) {
 			return helper.SendError(c, nil, errors.Forbidden)
 		}
 		return c.Next()
