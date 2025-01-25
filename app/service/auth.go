@@ -140,6 +140,7 @@ func (h *AuthService) Register(authData *serializer.AuthDataRegister) (*JwtPair,
 	return &pair, nil
 }
 
+// FIXME: Добавить проверку JWT AccessToken'а в Header's с игнором exp. времени
 func (h *AuthService) Refresh(refreshToken string) (*JwtPair, *helper.ServiceError) {
 	parsed, err := utils.ParseJwtRefreshToken(refreshToken)
 	if err != nil {

@@ -45,6 +45,7 @@ func GetJwtUserLocal(c *fiber.Ctx) (utils.JwtClaims, error) {
 	return parsedLocalUser, nil
 }
 
+// TODO: Требуется рефактор метода
 func GetJwtUserLocalWithParsedID(c *fiber.Ctx) (utils.JwtClaims, primitive.ObjectID, error) {
 	localUser := c.Locals("user")
 	if localUser == nil {

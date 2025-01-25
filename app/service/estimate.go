@@ -3,13 +3,11 @@ package service
 import (
 	"bitereview/app/errors"
 	"bitereview/app/helper"
-	"bitereview/app/param"
 	"bitereview/app/repository"
 	"bitereview/app/schema"
 	"bitereview/app/serializer"
 	"bitereview/app/utils"
 
-	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -27,49 +25,31 @@ func NewEstimateService(
 	}
 }
 
-func (es *EstimateService) GetEstimatesByReviewId(c *fiber.Ctx) error {
-	reviewId, err := param.ParamPrimitiveID(c, "reviewId")
-	if err != nil {
-		return helper.SendError(c, err, errors.ValidationError)
-	}
-
-	limit, offset := param.GetLimitOffset(c)
-
+func (es *EstimateService) GetEstimatesByReviewId(
+	reviewId primitive.ObjectID, limit, offset int64,
+) (*[]schema.Estimate, *helper.ServiceError) {
 	timeoutCtx, cancel := utils.CreateContextTimeout(15)
 	defer cancel()
 
 	reviews, err := es.estimateRepo.GetEntitiesByReviewId(timeoutCtx, reviewId, limit, offset)
 	if err != nil {
-		return helper.SendError(c, err, errors.MakeRepositoryError("Estimate"))
+		return nil, helper.NewServiceError(err, errors.MakeRepositoryError("Estimate"))
 	}
 
-	return helper.SendSuccess(c, reviews)
+	return &reviews, nil
 }
 
-func (es *EstimateService) AddEstimate(c *fiber.Ctx) error {
-	reviewId, err := param.ParamPrimitiveID(c, "reviewId")
-	if err != nil {
-		return helper.SendError(c, err, errors.ValidationError)
-	}
-
-	data, err := serializer.GetSerializedCreateEstimate(c)
-	if err != nil {
-		return err
-	}
-
-	_, _, err = serializer.GetJwtUserLocalWithParsedID(c)
-
-	if err != nil {
-		return helper.SendError(c, err, errors.Unauthorized)
-	}
-
+func (es *EstimateService) AddEstimate(
+	reviewId primitive.ObjectID, userId primitive.ObjectID, data *serializer.CreateEstimateDTO,
+) (*schema.Estimate, *helper.ServiceError) {
 	timeoutCtx, cancel := utils.CreateContextTimeout(15)
-	defer cancel()
 
-	_, err = es.reviewRepo.GetEntityByID(timeoutCtx, reviewId)
+	_, err := es.reviewRepo.GetEntityByID(timeoutCtx, reviewId)
 	if err == nil {
-		return helper.SendError(c, err, errors.EntityNotExists)
+		return nil, helper.NewServiceError(err, errors.ValidationError)
 	}
+
+	cancel()
 
 	estimate := &schema.Estimate{
 		ID:          primitive.NewObjectID(),
@@ -82,7 +62,10 @@ func (es *EstimateService) AddEstimate(c *fiber.Ctx) error {
 	withTimeout, cancel := utils.CreateContextTimeout(15)
 	defer cancel()
 
-	es.estimateRepo.CreateEntity(withTimeout, estimate)
+	_, err = es.estimateRepo.CreateEntity(withTimeout, estimate)
+	if err != nil {
+		return nil, helper.NewServiceError(err, errors.MakeRepositoryError("Estimate"))
+	}
 
-	return helper.SendSuccess(c, estimate)
+	return estimate, nil
 }
