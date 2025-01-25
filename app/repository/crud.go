@@ -2,6 +2,7 @@ package repository
 
 import (
 	"bitereview/app/database"
+	"bitereview/app/utils"
 	"context"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -45,5 +46,5 @@ func (r *CrudRepository[T]) UpdateBSON(ctx context.Context, filter bson.M, updat
 }
 
 func (r *CrudRepository[T]) GetAll(ctx context.Context, filter bson.M, limit, offset int64) ([]T, error) {
-
+	return utils.CursoredFind[T](r.Collection, ctx, filter, limit, offset)
 }

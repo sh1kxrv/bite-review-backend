@@ -25,8 +25,10 @@ func NewEstimateRepository() *EstimateRepository {
 	}
 }
 
-func (r *EstimateRepository) GetEntitiesByReviewId(ctx context.Context, reviewId primitive.ObjectID, limit, offset int) ([]schema.Estimate, error) {
+func (r *EstimateRepository) GetEntitiesByReviewId(
+	ctx context.Context, reviewId primitive.ObjectID, limit, offset int64,
+) ([]schema.Estimate, error) {
 	return utils.CursoredFind[schema.Estimate](
-		r.Collection, ctx, bson.M{"reviewId": reviewId},
+		r.Collection, ctx, bson.M{"reviewId": reviewId}, limit, offset,
 	)
 }

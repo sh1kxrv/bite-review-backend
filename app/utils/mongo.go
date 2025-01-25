@@ -4,9 +4,14 @@ import (
 	"context"
 
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func CursoredFind[T any](collection *mongo.Collection, context context.Context, filter interface{}) ([]T, error) {
+func CursoredFind[T any](collection *mongo.Collection, context context.Context, filter interface{}, limit, offset int64) ([]T, error) {
+	options := options.Find()
+	options.SetLimit(limit)
+	options.SetSkip(offset)
+
 	cursor, err := collection.Find(context, filter)
 
 	if err != nil {

@@ -21,7 +21,7 @@ func NewEstimateService(estimateRepo *repository.EstimateRepository) *EstimateSe
 }
 
 func (es *EstimateService) GetEstimatesByReviewId(c *fiber.Ctx) error {
-	reviewId, err := utils.ParamPrimitiveID(c, "reviewId")
+	reviewId, err := param.ParamPrimitiveID(c, "reviewId")
 	if err != nil {
 		return helper.SendError(c, err, errors.ValidationError)
 	}

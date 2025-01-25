@@ -10,6 +10,7 @@ import (
 	"bitereview/app/utils"
 
 	"github.com/gofiber/fiber/v2"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -25,7 +26,11 @@ func NewRestaurantService(restaurantRepo *repository.RestaurantRepository) *Rest
 
 func (rs *RestaurantService) GetRestaurants(c *fiber.Ctx) error {
 	limit, offset := param.GetLimitOffset(c)
-	restaurants, err := rs.RestaurantRepo.GetAll(limit, offset)
+
+	timeoutCtx, cancel := utils.CreateContextTimeout(15)
+	defer cancel()
+
+	restaurants, err := rs.RestaurantRepo.GetAll(timeoutCtx, bson.M{}, limit, offset)
 	if err != nil {
 		return helper.SendError(c, err, errors.MakeRepositoryError("Restaurant"))
 	}
