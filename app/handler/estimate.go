@@ -21,9 +21,8 @@ func (sh *EstimateHandler) GetEstimatesByReviewId(c *fiber.Ctx) error {
 	return sh.EstimateService.GetEstimatesByReviewId(c)
 }
 
-// TODO
 func (sh *EstimateHandler) AddEstimate(c *fiber.Ctx) error {
-	return nil
+	return sh.EstimateService.AddEstimate(c)
 }
 
 func (sh *EstimateHandler) RegisterRoutes(g fiber.Router) {

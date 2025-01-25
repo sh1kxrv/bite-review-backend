@@ -2,18 +2,18 @@ package handler
 
 import (
 	"bitereview/app/middleware"
-	"bitereview/app/repository"
+	"bitereview/app/service"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type ReviewHandler struct {
-	ReviewRepo *repository.ReviewRepository
+	reviewService *service.ReviewService
 }
 
-func NewReviewHandler(reviewRepo *repository.ReviewRepository) *ReviewHandler {
+func NewReviewHandler(service *service.ReviewService) *ReviewHandler {
 	return &ReviewHandler{
-		ReviewRepo: reviewRepo,
+		reviewService: service,
 	}
 }
 

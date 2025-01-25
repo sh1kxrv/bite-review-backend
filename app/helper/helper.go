@@ -15,7 +15,19 @@ type ErrorResponse struct {
 	Message    string `json:"message"`
 }
 
-func SendError(c *fiber.Ctx, origErr error, e ErrorResponse) error {
+type ServiceError struct {
+	Response      *ErrorResponse
+	OriginalError error
+}
+
+func NewServiceError(err error, e *ErrorResponse) *ServiceError {
+	return &ServiceError{
+		Response:      e,
+		OriginalError: err,
+	}
+}
+
+func SendError(c *fiber.Ctx, origErr error, e *ErrorResponse) error {
 	resp := Response{
 		Status: false,
 		Data:   e,
@@ -24,6 +36,17 @@ func SendError(c *fiber.Ctx, origErr error, e ErrorResponse) error {
 		logrus.Errorf("Fictive error %s, real error: %s", e.Message, origErr.Error())
 	}
 	return c.Status(e.StatusCode).JSON(resp)
+}
+
+func SendServiceError(c *fiber.Ctx, serr *ServiceError) error {
+	return SendError(c, serr.OriginalError, serr.Response)
+}
+
+func SendSomething(c *fiber.Ctx, data any, e *ServiceError) error {
+	if e != nil {
+		return SendServiceError(c, e)
+	}
+	return SendSuccess(c, data)
 }
 
 func buildSuccessResponse(data any) Response {

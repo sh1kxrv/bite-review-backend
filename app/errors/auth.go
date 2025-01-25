@@ -2,15 +2,16 @@ package errors
 
 import (
 	"bitereview/app/helper"
-	"net/http"
+
+	"github.com/gofiber/fiber/v2"
 )
 
-var Unauthorized = helper.ErrorResponse{
-	StatusCode: http.StatusUnauthorized,
+var Unauthorized = &helper.ErrorResponse{
+	StatusCode: fiber.StatusUnauthorized,
 	Message:    "Unauthorized",
 }
 
-var Forbidden = helper.ErrorResponse{
-	StatusCode: http.StatusForbidden,
+var Forbidden = &helper.ErrorResponse{
+	StatusCode: fiber.StatusForbidden,
 	Message:    "Forbidden",
 }

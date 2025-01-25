@@ -2,7 +2,11 @@ package handler
 
 import (
 	"bitereview/app/enum"
+	"bitereview/app/errors"
+	"bitereview/app/helper"
 	"bitereview/app/middleware"
+	"bitereview/app/param"
+	"bitereview/app/serializer"
 	"bitereview/app/service"
 
 	"github.com/gofiber/fiber/v2"
@@ -19,38 +23,65 @@ func NewRestaurantHandler(service *service.RestaurantService) *RestaurantHandler
 }
 
 func (rh *RestaurantHandler) GetRestaurants(c *fiber.Ctx) error {
-	return rh.RestaurantService.GetRestaurants(c)
+	limit, offset := param.GetLimitOffset(c)
+	restaurants, serr := rh.RestaurantService.GetRestaurants(limit, offset)
+	return helper.SendSomething(c, &restaurants, serr)
 }
 
 func (rh *RestaurantHandler) GetRestaurantById(c *fiber.Ctx) error {
-	return rh.RestaurantService.GetRestaurantById(c)
+	id, err := param.ParamPrimitiveID(c, "id")
+	if err != nil {
+		return helper.SendError(c, err, errors.ValidationError)
+	}
+	restaurant, serr := rh.RestaurantService.GetRestaurantById(id)
+	return helper.SendSomething(c, &restaurant, serr)
 }
 
 func (rh *RestaurantHandler) CreateRestaurant(c *fiber.Ctx) error {
-	return rh.RestaurantService.CreateRestaurant(c)
+	data, err := serializer.GetSerializedCreateRestaurant(c)
+	if err != nil {
+		return helper.SendError(c, err, errors.ValidationError)
+	}
+	restaurant, serr := rh.RestaurantService.CreateRestaurant(&data)
+	return helper.SendSomething(c, &restaurant, serr)
 }
 
-// TODO
+func (rh *RestaurantHandler) setVerifyState(c *fiber.Ctx, verifyBool bool) error {
+	id, err := param.ParamPrimitiveID(c, "id")
+	if err != nil {
+		return helper.SendError(c, err, errors.ValidationError)
+	}
+	serr := rh.RestaurantService.UpdateVerifiedStatus(id, verifyBool)
+	return helper.SendSomething(c, nil, serr)
+}
+
 func (rh *RestaurantHandler) VerifyRestaurant(c *fiber.Ctx) error {
-	return nil
+	return rh.setVerifyState(c, true)
 }
 
-// TODO
 func (rh *RestaurantHandler) UnverifyRestaurant(c *fiber.Ctx) error {
-	return nil
+	return rh.setVerifyState(c, false)
 }
 
-func (rh *RestaurantHandler) RegisterRoutes(g fiber.Router) {
-	adminRoute := g.Group("/admin/restaurant", middleware.JwtAuthMiddleware, middleware.CreateRoleMiddleware(enum.RoleAdmin))
-	adminRoute.Post("/", rh.CreateRestaurant)
-
+func (rh *RestaurantHandler) registerModeratorRoutes(g fiber.Router) {
 	moderRoute := g.Group("/moderator/restaurant", middleware.JwtAuthMiddleware, middleware.CreateRoleMiddleware(enum.RoleModerator))
 	moderRoute.Patch("/:id/verify", rh.VerifyRestaurant)
 	moderRoute.Patch("/:id/unverify", rh.UnverifyRestaurant)
+}
 
-	// Public
+func (rh *RestaurantHandler) registerAdminRoutes(g fiber.Router) {
+	adminRoute := g.Group("/admin/restaurant", middleware.JwtAuthMiddleware, middleware.CreateRoleMiddleware(enum.RoleAdmin))
+	adminRoute.Post("/", rh.CreateRestaurant)
+}
+
+func (rh *RestaurantHandler) registerPublicRoutes(g fiber.Router) {
 	restRoute := g.Group("/restaurant")
-
 	restRoute.Get("/", rh.GetRestaurants)
 	restRoute.Get("/:id", rh.GetRestaurantById)
+}
+
+func (rh *RestaurantHandler) RegisterRoutes(g fiber.Router) {
+	rh.registerModeratorRoutes(g)
+	rh.registerAdminRoutes(g)
+	rh.registerPublicRoutes(g)
 }

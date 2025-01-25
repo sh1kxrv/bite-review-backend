@@ -79,14 +79,17 @@ func InitRouter(app *fiber.App) {
 	estimateRepository := repository.NewEstimateRepository()
 
 	// Services
-	estimateService := service.NewEstimateService(estimateRepository)
+	estimateService := service.NewEstimateService(estimateRepository, reviewRepository)
 	restaurantService := service.NewRestaurantService(restaurantRepository)
+	reviewService := service.NewReviewService(reviewRepository)
+	userService := service.NewUserService(userRepository)
+	authService := service.NewAuthService(userRepository)
 
 	// Handlers
-	userHandler := handler.NewUserHandler(userRepository)
-	authHandler := handler.NewAuthHandler(userRepository)
+	userHandler := handler.NewUserHandler(userService)
+	authHandler := handler.NewAuthHandler(authService)
 	restaurantHandler := handler.NewRestaurantHandler(restaurantService)
-	reviewHandler := handler.NewReviewHandler(reviewRepository)
+	reviewHandler := handler.NewReviewHandler(reviewService)
 	estimateHandler := handler.NewEstimateHandler(estimateService)
 
 	// Router

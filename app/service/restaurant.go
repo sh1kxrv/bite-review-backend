@@ -3,70 +3,50 @@ package service
 import (
 	"bitereview/app/errors"
 	"bitereview/app/helper"
-	"bitereview/app/param"
 	"bitereview/app/repository"
 	"bitereview/app/schema"
 	"bitereview/app/serializer"
 	"bitereview/app/utils"
 
-	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type RestaurantService struct {
-	RestaurantRepo *repository.RestaurantRepository
+	restaurantRepo *repository.RestaurantRepository
 }
 
 func NewRestaurantService(restaurantRepo *repository.RestaurantRepository) *RestaurantService {
 	return &RestaurantService{
-		RestaurantRepo: restaurantRepo,
+		restaurantRepo: restaurantRepo,
 	}
 }
 
-func (rs *RestaurantService) GetRestaurants(c *fiber.Ctx) error {
-	limit, offset := param.GetLimitOffset(c)
-
+func (rs *RestaurantService) GetRestaurants(limit, offset int64) (*[]schema.Restaurant, *helper.ServiceError) {
 	timeoutCtx, cancel := utils.CreateContextTimeout(15)
 	defer cancel()
 
-	restaurants, err := rs.RestaurantRepo.GetAll(timeoutCtx, bson.M{}, limit, offset)
+	restaurants, err := rs.restaurantRepo.GetAll(timeoutCtx, bson.M{}, limit, offset)
 	if err != nil {
-		return helper.SendError(c, err, errors.MakeRepositoryError("Restaurant"))
+		return nil, helper.NewServiceError(err, errors.MakeRepositoryError("Restaurant"))
 	}
 
-	return helper.SendSuccess(c, restaurants)
+	return &restaurants, nil
 }
 
-func (rs *RestaurantService) GetRestaurantById(c *fiber.Ctx) error {
-	restId, err := param.ParamPrimitiveID(c, "id")
-	if err != nil {
-		return helper.SendError(c, err, errors.ValidationError)
-	}
-
+func (rs *RestaurantService) GetRestaurantById(id primitive.ObjectID) (*schema.Restaurant, *helper.ServiceError) {
 	timeoutCtx, cancel := utils.CreateContextTimeout(15)
 	defer cancel()
 
-	restaurant, err := rs.RestaurantRepo.GetEntityByID(timeoutCtx, restId)
+	restaurant, err := rs.restaurantRepo.GetEntityByID(timeoutCtx, id)
 	if err != nil {
-		return helper.SendError(c, err, errors.MakeRepositoryError("Restaurant"))
+		return nil, helper.NewServiceError(err, errors.MakeRepositoryError("Restaurant"))
 	}
 
-	return helper.SendSuccess(c, restaurant)
+	return restaurant, nil
 }
 
-func (rs *RestaurantService) CreateRestaurant(c *fiber.Ctx) error {
-	data, err := serializer.GetSerializedCreateRestaurant(c)
-	if err != nil {
-		return err
-	}
-
-	_, _, err = serializer.GetJwtUserLocalWithParsedID(c)
-
-	if err != nil {
-		return helper.SendError(c, err, errors.Unauthorized)
-	}
-
+func (rs *RestaurantService) CreateRestaurant(data *serializer.CreateRestaurantDTO) (*schema.Restaurant, *helper.ServiceError) {
 	restourant := &schema.Restaurant{
 		ID:          primitive.NewObjectID(),
 		Name:        data.Name,
@@ -83,7 +63,19 @@ func (rs *RestaurantService) CreateRestaurant(c *fiber.Ctx) error {
 	withTimeout, cancel := utils.CreateContextTimeout(15)
 	defer cancel()
 
-	rs.RestaurantRepo.CreateEntity(withTimeout, restourant)
+	rs.restaurantRepo.CreateEntity(withTimeout, restourant)
 
-	return helper.SendSuccess(c, restourant)
+	return restourant, nil
+}
+
+func (rs *RestaurantService) UpdateVerifiedStatus(id primitive.ObjectID, verifiedState bool) *helper.ServiceError {
+	timeoutCtx, cancel := utils.CreateContextTimeout(15)
+	defer cancel()
+
+	err := rs.restaurantRepo.UpdateVerifiedStatus(timeoutCtx, id, verifiedState)
+	if err != nil {
+		return helper.NewServiceError(err, errors.MakeRepositoryError("Restaurant"))
+	}
+
+	return nil
 }

@@ -4,20 +4,20 @@ import (
 	"bitereview/app/errors"
 	"bitereview/app/helper"
 	"bitereview/app/middleware"
-	"bitereview/app/repository"
 	"bitereview/app/serializer"
+	"bitereview/app/service"
 
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type UserHandler struct {
-	UserRepo *repository.UserRepository
+	UserService *service.UserService
 }
 
-func NewUserHandler(userRepo *repository.UserRepository) *UserHandler {
+func NewUserHandler(service *service.UserService) *UserHandler {
 	return &UserHandler{
-		UserRepo: userRepo,
+		UserService: service,
 	}
 }
 
@@ -32,7 +32,7 @@ func (h *UserHandler) GetMeHandler(c *fiber.Ctx) error {
 		return helper.SendError(c, err, errors.ValidationError)
 	}
 
-	user, err := h.UserRepo.GetEntityByID(c.Context(), parsedId)
+	user, err := h.UserService.GetEntityByID(c.Context(), parsedId)
 	if err != nil {
 		return helper.SendError(c, err, errors.MakeRepositoryError("User"))
 	}
