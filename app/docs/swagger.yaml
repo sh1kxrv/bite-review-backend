@@ -6,6 +6,12 @@ definitions:
       message:
         type: string
     type: object
+  helper.Response:
+    properties:
+      data: {}
+      status:
+        type: boolean
+    type: object
   schema.Estimate:
     properties:
       createdAt:
@@ -20,6 +26,36 @@ definitions:
         type: string
       value:
         type: integer
+    type: object
+  schema.Restaurant:
+    properties:
+      address:
+        type: string
+      city:
+        type: string
+      country:
+        type: string
+      createdAt:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      isVerified:
+        type: boolean
+      kitchenType:
+        items:
+          type: string
+        type: array
+      metadata:
+        additionalProperties: {}
+        type: object
+      name:
+        type: string
+      site:
+        type: string
+      updatedAt:
+        type: string
     type: object
   serializer.AuthDataLogin:
     properties:
@@ -77,6 +113,34 @@ definitions:
     - name
     - value
     type: object
+  serializer.CreateRestaurantDTO:
+    properties:
+      address:
+        type: string
+      city:
+        type: string
+      country:
+        type: string
+      description:
+        type: string
+      images:
+        items:
+          type: string
+        type: array
+      kitchenType:
+        items:
+          type: string
+        type: array
+      metadata:
+        additionalProperties: {}
+        type: object
+      name:
+        type: string
+      site:
+        type: string
+    required:
+    - name
+    type: object
   service.JwtPair:
     properties:
       accessExpiresIn:
@@ -94,6 +158,31 @@ info:
   title: BiteReview API
   version: "1.0"
 paths:
+  /api/v1/admin/restaurant:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные регистрации ресторана
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/serializer.CreateRestaurantDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.Restaurant'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helper.ErrorResponse'
+      summary: Регистрация ресторана в системе
+      tags:
+      - Рестораны | Admin
   /api/v1/auth/login:
     post:
       consumes:
@@ -218,9 +307,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/schema.Estimate'
-            type: array
+            $ref: '#/definitions/schema.Estimate'
         "400":
           description: Bad Request
           schema:
@@ -230,6 +317,107 @@ paths:
       summary: Добавление оценки в ревью
       tags:
       - Оценка
+  /api/v1/moderator/restaurant/{id}/unverify:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID ресторана
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helper.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helper.ErrorResponse'
+      summary: Отмена верификации ресторана
+      tags:
+      - Рестораны | Moderator
+  /api/v1/moderator/restaurant/{id}/verify:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID ресторана
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helper.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helper.ErrorResponse'
+      summary: Верификция ресторана
+      tags:
+      - Рестораны | Moderator
+  /api/v1/restaurant:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Количество садов
+        in: query
+        name: limit
+        type: integer
+      - description: Смещение по количеству
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/schema.Restaurant'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helper.ErrorResponse'
+      summary: Получить рестораны
+      tags:
+      - Рестораны | Public
+  /api/v1/restaurant/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID ресторана
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.Restaurant'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helper.ErrorResponse'
+      summary: Получить ресторан по ID
+      tags:
+      - Рестораны | Public
 securityDefinitions:
   ApiKeyAuth:
     description: Bearer Token authortization
