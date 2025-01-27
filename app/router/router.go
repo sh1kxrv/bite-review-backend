@@ -1,7 +1,7 @@
 package router
 
 import (
-	"bitereview/app/handler"
+	"bitereview/handler"
 
 	"github.com/gofiber/fiber/v2"
 )

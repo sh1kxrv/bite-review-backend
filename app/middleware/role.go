@@ -1,10 +1,10 @@
 package middleware
 
 import (
-	"bitereview/app/enum"
-	"bitereview/app/errors"
-	"bitereview/app/helper"
-	"bitereview/app/utils"
+	"bitereview/enum"
+	"bitereview/errors"
+	"bitereview/helper"
+	"bitereview/utils"
 	"slices"
 
 	"github.com/gofiber/fiber/v2"

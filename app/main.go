@@ -1,13 +1,13 @@
 package main
 
 import (
-	"bitereview/app/cache/memcache"
-	"bitereview/app/config"
-	"bitereview/app/database"
-	"bitereview/app/handler"
-	"bitereview/app/repository"
-	"bitereview/app/router"
-	"bitereview/app/service"
+	"bitereview/cache/memcache"
+	"bitereview/config"
+	"bitereview/database"
+	"bitereview/handler"
+	"bitereview/repository"
+	"bitereview/router"
+	"bitereview/service"
 	"context"
 	"os"
 	"os/signal"
@@ -16,11 +16,23 @@ import (
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/swagger"
+
+	// docs
+	_ "bitereview/docs"
 
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
+// @title BiteReview API
+// @version 1.0
+// @host 127.0.0.1:3000
+// @securityDefinitions.apikey	ApiKeyAuth
+// @in header
+// @name Authorization
+// @description Bearer Token authortization
+// @BasePath /
 func main() {
 	memoryCacheContext, cancel := context.WithCancel(context.Background())
 
@@ -43,13 +55,15 @@ func main() {
 	}
 
 	var app = fiber.New(fiber.Config{
-		ServerHeader: "GetGarden-Server",
+		ServerHeader: "BiteReview-Server",
 		JSONEncoder:  json.Marshal,
 		JSONDecoder:  json.Unmarshal,
 	})
 
 	app.Use(memcache.MemoryCacheMiddleware(memoryCache))
 	app.Use(cors.New())
+
+	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	InitRouter(app)
 

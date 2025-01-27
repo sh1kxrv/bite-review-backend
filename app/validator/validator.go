@@ -1,7 +1,7 @@
 package validator
 
 import (
-	"bitereview/app/validation"
+	"bitereview/validation"
 	"sync"
 
 	"github.com/go-playground/validator/v10"

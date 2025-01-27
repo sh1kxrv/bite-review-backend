@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"bitereview/app/database"
-	"bitereview/app/schema"
+	"bitereview/database"
+	"bitereview/schema"
 	"context"
 	"time"
 

@@ -1,6 +1,6 @@
 package service
 
-import "bitereview/app/repository"
+import "bitereview/repository"
 
 type ReviewService struct {
 	reviewRepo *repository.ReviewRepository

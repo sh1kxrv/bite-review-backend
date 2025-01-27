@@ -1,12 +1,12 @@
 package handler
 
 import (
-	"bitereview/app/errors"
-	"bitereview/app/helper"
-	"bitereview/app/middleware"
-	"bitereview/app/param"
-	"bitereview/app/serializer"
-	"bitereview/app/service"
+	"bitereview/errors"
+	"bitereview/helper"
+	"bitereview/middleware"
+	"bitereview/param"
+	"bitereview/serializer"
+	"bitereview/service"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -21,6 +21,15 @@ func NewEstimateHandler(estimateService *service.EstimateService) *EstimateHandl
 	}
 }
 
+// @Summary Получение оценок из ревью
+// @Tags Оценка
+// @Security ApiKeyAuth
+// @Accept json
+// @Produce json
+// @Param reviewId path string true "ID review"
+// @Success 200 {array} schema.Estimate
+// @Failure 400 {object} helper.ErrorResponse
+// @Router /api/v1/estimate/{reviewId} [get]
 func (sh *EstimateHandler) GetEstimatesByReviewId(c *fiber.Ctx) error {
 	reviewId, err := param.ParamPrimitiveID(c, "reviewId")
 	if err != nil {
@@ -33,6 +42,16 @@ func (sh *EstimateHandler) GetEstimatesByReviewId(c *fiber.Ctx) error {
 	return helper.SendSomething(c, &data, serr)
 }
 
+// @Summary Добавление оценки в ревью
+// @Tags Оценка
+// @Security ApiKeyAuth
+// @Accept json
+// @Produce json
+// @Param reviewId path string true "ID review"
+// @Param data body serializer.CreateEstimateDTO true "Оценка"
+// @Success 200 {object} schema.Estimate
+// @Failure 400 {object} helper.ErrorResponse
+// @Router /api/v1/estimate/{reviewId} [post]
 func (sh *EstimateHandler) AddEstimate(c *fiber.Ctx) error {
 	_, userId, err := serializer.GetJwtUserLocalWithParsedID(c)
 	if err != nil {

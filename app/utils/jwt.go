@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"bitereview/app/config"
-	"bitereview/app/enum"
+	"bitereview/config"
+	"bitereview/enum"
 	"fmt"
 
 	"github.com/golang-jwt/jwt/v5"

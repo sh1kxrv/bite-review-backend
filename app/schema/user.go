@@ -1,7 +1,7 @@
 package schema
 
 import (
-	"bitereview/app/enum"
+	"bitereview/enum"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"

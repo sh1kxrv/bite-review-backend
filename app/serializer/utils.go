@@ -1,8 +1,8 @@
 package serializer
 
 import (
-	"bitereview/app/utils"
-	"bitereview/app/validator"
+	"bitereview/utils"
+	"bitereview/validator"
 	"bytes"
 
 	"github.com/goccy/go-json"

@@ -1,15 +1,15 @@
 package service
 
 import (
-	"bitereview/app/config"
-	"bitereview/app/crypto"
-	"bitereview/app/enum"
-	"bitereview/app/errors"
-	"bitereview/app/helper"
-	"bitereview/app/repository"
-	"bitereview/app/schema"
-	"bitereview/app/serializer"
-	"bitereview/app/utils"
+	"bitereview/config"
+	"bitereview/crypto"
+	"bitereview/enum"
+	"bitereview/errors"
+	"bitereview/helper"
+	"bitereview/repository"
+	"bitereview/schema"
+	"bitereview/serializer"
+	"bitereview/utils"
 	"context"
 	"time"
 

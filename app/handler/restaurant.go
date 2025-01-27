@@ -1,13 +1,13 @@
 package handler
 
 import (
-	"bitereview/app/enum"
-	"bitereview/app/errors"
-	"bitereview/app/helper"
-	"bitereview/app/middleware"
-	"bitereview/app/param"
-	"bitereview/app/serializer"
-	"bitereview/app/service"
+	"bitereview/enum"
+	"bitereview/errors"
+	"bitereview/helper"
+	"bitereview/middleware"
+	"bitereview/param"
+	"bitereview/serializer"
+	"bitereview/service"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/sirupsen/logrus"
@@ -23,6 +23,15 @@ func NewRestaurantHandler(service *service.RestaurantService) *RestaurantHandler
 	}
 }
 
+// @Summary Получить рестораны
+// @Tags Рестораны | Public
+// @Accept json
+// @Produce json
+// @Param limit query int false "Количество садов"
+// @Param offset query int false "Смещение по количеству"
+// @Success 200 {array} schema.Restaurant
+// @Failure 400 {object} helper.ErrorResponse
+// @Router /api/v1/restaurant [get]
 func (rh *RestaurantHandler) GetRestaurants(c *fiber.Ctx) error {
 	limit, offset := param.GetLimitOffset(c)
 
@@ -32,6 +41,14 @@ func (rh *RestaurantHandler) GetRestaurants(c *fiber.Ctx) error {
 	return helper.SendSomething(c, &restaurants, serr)
 }
 
+// @Summary Получить ресторан по ID
+// @Tags Рестораны | Public
+// @Accept json
+// @Produce json
+// @Param id path string true "ID ресторана"
+// @Success 200 {object} schema.Restaurant
+// @Failure 400 {object} helper.ErrorResponse
+// @Router /api/v1/restaurant/{id} [get]
 func (rh *RestaurantHandler) GetRestaurantById(c *fiber.Ctx) error {
 	id, err := param.ParamPrimitiveID(c, "id")
 	if err != nil {
@@ -41,6 +58,14 @@ func (rh *RestaurantHandler) GetRestaurantById(c *fiber.Ctx) error {
 	return helper.SendSomething(c, &restaurant, serr)
 }
 
+// @Summary Регистрация ресторана в системе
+// @Tags Рестораны | Admin
+// @Accept json
+// @Produce json
+// @Param data body serializer.CreateRestaurantDTO true "Данные регистрации ресторана"
+// @Success 200 {object} schema.Restaurant
+// @Failure 400 {object} helper.ErrorResponse
+// @Router /api/v1/admin/restaurant [post]
 func (rh *RestaurantHandler) CreateRestaurant(c *fiber.Ctx) error {
 	data, err := serializer.GetSerializedCreateRestaurant(c)
 	if err != nil {
@@ -59,10 +84,26 @@ func (rh *RestaurantHandler) setVerifyState(c *fiber.Ctx, verifyBool bool) error
 	return helper.SendSomething(c, nil, serr)
 }
 
+// @Summary Верификция ресторана
+// @Tags Рестораны | Moderator
+// @Accept json
+// @Produce json
+// @Param id path string true "ID ресторана"
+// @Success 200 {object} helper.Response
+// @Failure 400 {object} helper.ErrorResponse
+// @Router /api/v1/moderator/restaurant/{id}/verify [patch]
 func (rh *RestaurantHandler) VerifyRestaurant(c *fiber.Ctx) error {
 	return rh.setVerifyState(c, true)
 }
 
+// @Summary Отмена верификации ресторана
+// @Tags Рестораны | Moderator
+// @Accept json
+// @Produce json
+// @Param id path string true "ID ресторана"
+// @Success 200 {object} helper.Response
+// @Failure 400 {object} helper.ErrorResponse
+// @Router /api/v1/moderator/restaurant/{id}/unverify [patch]
 func (rh *RestaurantHandler) UnverifyRestaurant(c *fiber.Ctx) error {
 	return rh.setVerifyState(c, false)
 }

@@ -1,9 +1,9 @@
 package repository
 
 import (
-	"bitereview/app/database"
-	"bitereview/app/schema"
-	"bitereview/app/utils"
+	"bitereview/database"
+	"bitereview/schema"
+	"bitereview/utils"
 	"context"
 
 	"go.mongodb.org/mongo-driver/bson"

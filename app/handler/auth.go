@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"bitereview/app/errors"
-	"bitereview/app/helper"
-	"bitereview/app/serializer"
-	"bitereview/app/service"
+	"bitereview/errors"
+	"bitereview/helper"
+	"bitereview/serializer"
+	"bitereview/service"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -19,6 +19,14 @@ func NewAuthHandler(authService *service.AuthService) *AuthHandler {
 	}
 }
 
+// @Summary Авторизация
+// @Tags Авторизация
+// @Accept json
+// @Produce json
+// @Param data body serializer.AuthDataLogin true "Авторизационные данные"
+// @Success 200 {object} service.JwtPair
+// @Failure 400 {object} helper.ErrorResponse
+// @Router /api/v1/auth/login [post]
 func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	data, err := serializer.GetSerializedAuthLoginData(c)
 
@@ -30,6 +38,14 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	return helper.SendSomething(c, &pair, serr)
 }
 
+// @Summary Регистрация
+// @Tags Авторизация
+// @Accept json
+// @Produce json
+// @Param data body serializer.AuthDataRegister true "Данные регистрации"
+// @Success 200 {object} service.JwtPair
+// @Failure 400 {object} helper.ErrorResponse
+// @Router /api/v1/auth/register [post]
 func (h *AuthHandler) Register(c *fiber.Ctx) error {
 	data, err := serializer.GetSerializedAuthRegisterData(c)
 
@@ -41,6 +57,14 @@ func (h *AuthHandler) Register(c *fiber.Ctx) error {
 	return helper.SendSomething(c, &pair, serr)
 }
 
+// @Summary Обновление Access токена
+// @Tags Авторизация
+// @Accept json
+// @Produce json
+// @Param data body serializer.AuthDataRefresh true "Данные обновления токена"
+// @Success 200 {object} service.JwtPair
+// @Failure 400 {object} helper.ErrorResponse
+// @Router /api/v1/auth/refresh [post]
 func (h *AuthHandler) Refresh(c *fiber.Ctx) error {
 	v, err := serializer.GetSerializedAuthRefreshData(c)
 

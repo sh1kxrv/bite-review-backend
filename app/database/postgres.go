@@ -1,8 +1,8 @@
 package database
 
 // import (
-// 	"bitereview/app/config"
-// 	"bitereview/app/model"
+// 	"bitereview/config"
+// 	"bitereview/model"
 
 // 	"github.com/sirupsen/logrus"
 // 	"gorm.io/driver/postgres"

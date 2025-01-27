@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"bitereview/app/errors"
-	"bitereview/app/helper"
-	"bitereview/app/utils"
+	"bitereview/errors"
+	"bitereview/helper"
+	"bitereview/utils"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"

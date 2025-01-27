@@ -1,7 +1,7 @@
 package errors
 
 import (
-	"bitereview/app/helper"
+	"bitereview/helper"
 
 	"github.com/gofiber/fiber/v2"
 )

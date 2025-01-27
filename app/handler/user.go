@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"bitereview/app/helper"
-	"bitereview/app/middleware"
-	"bitereview/app/serializer"
-	"bitereview/app/service"
+	"bitereview/helper"
+	"bitereview/middleware"
+	"bitereview/serializer"
+	"bitereview/service"
 
 	"github.com/gofiber/fiber/v2"
 )

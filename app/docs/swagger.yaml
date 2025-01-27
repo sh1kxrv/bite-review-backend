@@ -1,0 +1,239 @@
+definitions:
+  helper.ErrorResponse:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+  schema.Estimate:
+    properties:
+      createdAt:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      reviewId:
+        type: string
+      value:
+        type: integer
+    type: object
+  serializer.AuthDataLogin:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  serializer.AuthDataRefresh:
+    properties:
+      refreshToken:
+        type: string
+    required:
+    - refreshToken
+    type: object
+  serializer.AuthDataRegister:
+    properties:
+      email:
+        type: string
+      firstName:
+        maxLength: 50
+        minLength: 2
+        type: string
+      lastName:
+        maxLength: 50
+        minLength: 2
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - firstName
+    - lastName
+    - password
+    type: object
+  serializer.CreateEstimateDTO:
+    properties:
+      description:
+        maxLength: 50
+        minLength: 2
+        type: string
+      name:
+        maxLength: 50
+        minLength: 2
+        type: string
+      value:
+        maximum: 100
+        minimum: 1
+        type: integer
+    required:
+    - description
+    - name
+    - value
+    type: object
+  service.JwtPair:
+    properties:
+      accessExpiresIn:
+        type: string
+      accessToken:
+        type: string
+      refreshExpiresIn:
+        type: string
+      refreshToken:
+        type: string
+    type: object
+host: 127.0.0.1:3000
+info:
+  contact: {}
+  title: BiteReview API
+  version: "1.0"
+paths:
+  /api/v1/auth/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Авторизационные данные
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/serializer.AuthDataLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.JwtPair'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helper.ErrorResponse'
+      summary: Авторизация
+      tags:
+      - Авторизация
+  /api/v1/auth/refresh:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные обновления токена
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/serializer.AuthDataRefresh'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.JwtPair'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helper.ErrorResponse'
+      summary: Обновление Access токена
+      tags:
+      - Авторизация
+  /api/v1/auth/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные регистрации
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/serializer.AuthDataRegister'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.JwtPair'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helper.ErrorResponse'
+      summary: Регистрация
+      tags:
+      - Авторизация
+  /api/v1/estimate/{reviewId}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID review
+        in: path
+        name: reviewId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/schema.Estimate'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helper.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Получение оценок из ревью
+      tags:
+      - Оценка
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID review
+        in: path
+        name: reviewId
+        required: true
+        type: string
+      - description: Оценка
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/serializer.CreateEstimateDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/schema.Estimate'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helper.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Добавление оценки в ревью
+      tags:
+      - Оценка
+securityDefinitions:
+  ApiKeyAuth:
+    description: Bearer Token authortization
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

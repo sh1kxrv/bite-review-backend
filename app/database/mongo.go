@@ -1,7 +1,7 @@
 package database
 
 import (
-	"bitereview/app/config"
+	"bitereview/config"
 	"context"
 
 	"github.com/sirupsen/logrus"

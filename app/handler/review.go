@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"bitereview/app/middleware"
-	"bitereview/app/service"
+	"bitereview/middleware"
+	"bitereview/service"
 
 	"github.com/gofiber/fiber/v2"
 )

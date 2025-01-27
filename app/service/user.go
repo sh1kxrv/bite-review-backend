@@ -1,11 +1,11 @@
 package service
 
 import (
-	"bitereview/app/errors"
-	"bitereview/app/helper"
-	"bitereview/app/repository"
-	"bitereview/app/schema"
-	"bitereview/app/utils"
+	"bitereview/errors"
+	"bitereview/helper"
+	"bitereview/repository"
+	"bitereview/schema"
+	"bitereview/utils"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
