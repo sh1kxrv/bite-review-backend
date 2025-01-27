@@ -1,4 +1,18 @@
 definitions:
+  enum.Role:
+    enum:
+    - critic
+    - restorer
+    - moderator
+    - admin
+    - helper
+    type: string
+    x-enum-varnames:
+    - RoleCritic
+    - RoleRestorer
+    - RoleModerator
+    - RoleAdmin
+    - RoleHelper
   helper.ErrorResponse:
     properties:
       code:
@@ -55,6 +69,31 @@ definitions:
       site:
         type: string
       updatedAt:
+        type: string
+    type: object
+  schema.User:
+    properties:
+      createdAt:
+        type: string
+      email:
+        type: string
+      firstName:
+        type: string
+      id:
+        type: string
+      isVerified:
+        type: boolean
+      lastName:
+        type: string
+      lastSeen:
+        type: string
+      role:
+        $ref: '#/definitions/enum.Role'
+      updatedAt:
+        type: string
+      username:
+        type: string
+      verifiedBy:
         type: string
     type: object
   serializer.AuthDataLogin:
@@ -180,6 +219,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/helper.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Регистрация ресторана в системе
       tags:
       - Рестораны | Admin
@@ -338,6 +379,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/helper.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Отмена верификации ресторана
       tags:
       - Рестораны | Moderator
@@ -362,6 +405,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/helper.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Верификция ресторана
       tags:
       - Рестораны | Moderator
@@ -418,6 +463,26 @@ paths:
       summary: Получить ресторан по ID
       tags:
       - Рестораны | Public
+  /api/v1/user/me:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helper.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Получить данные о своём аккаунте
+      tags:
+      - Пользователь
 securityDefinitions:
   ApiKeyAuth:
     description: Bearer Token authortization

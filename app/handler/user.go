@@ -19,6 +19,14 @@ func NewUserHandler(service *service.UserService) *UserHandler {
 	}
 }
 
+// @Summary Получить данные о своём аккаунте
+// @Tags Пользователь
+// @Security ApiKeyAuth
+// @Accept json
+// @Produce json
+// @Success 200 {object} schema.User
+// @Failure 400 {object} helper.ErrorResponse
+// @Router /api/v1/user/me [get]
 func (h *UserHandler) GetMeHandler(c *fiber.Ctx) error {
 	_, parsedId, err := serializer.GetJwtUserLocalWithParsedID(c)
 	if err != nil {

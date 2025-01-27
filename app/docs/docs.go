@@ -17,6 +17,11 @@ const docTemplate = `{
     "paths": {
         "/api/v1/admin/restaurant": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -267,6 +272,11 @@ const docTemplate = `{
         },
         "/api/v1/moderator/restaurant/{id}/unverify": {
             "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -304,6 +314,11 @@ const docTemplate = `{
         },
         "/api/v1/moderator/restaurant/{id}/verify": {
             "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -420,9 +435,59 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/api/v1/user/me": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Пользователь"
+                ],
+                "summary": "Получить данные о своём аккаунте",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.User"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/helper.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "enum.Role": {
+            "type": "string",
+            "enum": [
+                "critic",
+                "restorer",
+                "moderator",
+                "admin",
+                "helper"
+            ],
+            "x-enum-varnames": [
+                "RoleCritic",
+                "RoleRestorer",
+                "RoleModerator",
+                "RoleAdmin",
+                "RoleHelper"
+            ]
+        },
         "helper.ErrorResponse": {
             "type": "object",
             "properties": {
@@ -507,6 +572,44 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "schema.User": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "isVerified": {
+                    "type": "boolean"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "lastSeen": {
+                    "type": "string"
+                },
+                "role": {
+                    "$ref": "#/definitions/enum.Role"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "verifiedBy": {
                     "type": "string"
                 }
             }

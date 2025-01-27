@@ -60,6 +60,7 @@ func (rh *RestaurantHandler) GetRestaurantById(c *fiber.Ctx) error {
 
 // @Summary Регистрация ресторана в системе
 // @Tags Рестораны | Admin
+// @Security ApiKeyAuth
 // @Accept json
 // @Produce json
 // @Param data body serializer.CreateRestaurantDTO true "Данные регистрации ресторана"
@@ -86,6 +87,7 @@ func (rh *RestaurantHandler) setVerifyState(c *fiber.Ctx, verifyBool bool) error
 
 // @Summary Верификция ресторана
 // @Tags Рестораны | Moderator
+// @Security ApiKeyAuth
 // @Accept json
 // @Produce json
 // @Param id path string true "ID ресторана"
@@ -98,6 +100,7 @@ func (rh *RestaurantHandler) VerifyRestaurant(c *fiber.Ctx) error {
 
 // @Summary Отмена верификации ресторана
 // @Tags Рестораны | Moderator
+// @Security ApiKeyAuth
 // @Accept json
 // @Produce json
 // @Param id path string true "ID ресторана"
