@@ -1,0 +1,11 @@
+version: '3'
+
+tasks:
+  run:api:
+    dir: 'app'
+    cmds:
+      - go run ./main.go
+  swag:
+    dir: 'app'
+    cmds:
+      - swag init

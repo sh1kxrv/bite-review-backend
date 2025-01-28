@@ -17,5 +17,9 @@ func NewRouterReview(service *ReviewService) *RouterReview {
 }
 
 func (rr *RouterReview) RegisterRoutes(g fiber.Router) {
-	g.Group("/review", middleware.JwtAuthMiddleware)
+	reviewGroupPrivate := g.Group("/review", middleware.JwtAuthMiddleware)
+	reviewGroupPublic := g.Group("/public/review")
+
+	reviewGroupPrivate.Post("/:restaurantId", rr.handler.CreateReview)
+	reviewGroupPublic.Get("/:restaurantId", rr.handler.GetReviewsByRestaurantId)
 }

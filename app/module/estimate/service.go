@@ -45,7 +45,7 @@ func (es *EstimateService) AddEstimate(
 	defer cancel()
 
 	_, err := es.reviewRepo.GetEntityByID(timeoutCtx, reviewId)
-	if err == nil {
+	if err != nil {
 		return nil, helper.NewServiceError(err, errors.ValidationError)
 	}
 

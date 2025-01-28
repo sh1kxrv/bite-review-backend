@@ -17,8 +17,9 @@ func NewRouterEstimate(service *EstimateService) *RouterEstimate {
 }
 
 func (re *RouterEstimate) RegisterRoutes(g fiber.Router) {
-	estimateRoute := g.Group("/estimate", middleware.JwtAuthMiddleware)
+	estimatePublicRoute := g.Group("/public/estimate", middleware.JwtAuthMiddleware)
+	estimatePrivateGroup := g.Group("/estimate", middleware.JwtAuthMiddleware)
 
-	estimateRoute.Get("/:reviewId", re.handler.GetEstimatesByReviewId)
-	estimateRoute.Post("/:reviewId", re.handler.AddEstimate)
+	estimatePublicRoute.Get("/:reviewId", re.handler.GetEstimatesByReviewId)
+	estimatePrivateGroup.Post("/:reviewId", re.handler.AddEstimate)
 }

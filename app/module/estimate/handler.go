@@ -20,14 +20,16 @@ func NewEstimateHandler(estimateService *EstimateService) *EstimateHandler {
 }
 
 // @Summary Получение оценок из ревью
-// @Tags Оценка
+// @Tags Оценка | Public
 // @Security ApiKeyAuth
 // @Accept json
 // @Produce json
 // @Param reviewId path string true "ID review"
+// @Param limit query int false "Количество"
+// @Param offset query int false "Смещение"
 // @Success 200 {array} entity.Estimate
 // @Failure 400 {object} helper.ErrorResponse
-// @Router /api/v1/estimate/{reviewId} [get]
+// @Router /api/v1/public/estimate/{reviewId} [get]
 func (sh *EstimateHandler) GetEstimatesByReviewId(c *fiber.Ctx) error {
 	reviewId, err := param.ParamPrimitiveID(c, "reviewId")
 	if err != nil {
