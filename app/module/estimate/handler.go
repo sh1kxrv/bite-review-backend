@@ -19,8 +19,8 @@ func NewEstimateHandler(estimateService *EstimateService) *EstimateHandler {
 	}
 }
 
-// @Summary Получение оценок из ревью
-// @Tags Оценка | Public
+// @Summary Получение оценок из обзора
+// @Tags Оценка,Оценка / Общедоступные
 // @Security ApiKeyAuth
 // @Accept json
 // @Produce json
@@ -42,7 +42,7 @@ func (sh *EstimateHandler) GetEstimatesByReviewId(c *fiber.Ctx) error {
 	return helper.SendSomething(c, &data, serr)
 }
 
-// @Summary Добавление оценки в ревью
+// @Summary Добавление оценки в обзор
 // @Tags Оценка
 // @Security ApiKeyAuth
 // @Accept json

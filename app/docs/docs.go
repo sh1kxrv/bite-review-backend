@@ -29,7 +29,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Рестораны | Admin"
+                    "Рестораны",
+                    "Рестораны / Администратор"
                 ],
                 "summary": "Регистрация ресторана в системе",
                 "parameters": [
@@ -192,7 +193,7 @@ const docTemplate = `{
                 "tags": [
                     "Оценка"
                 ],
-                "summary": "Добавление оценки в ревью",
+                "summary": "Добавление оценки в обзор",
                 "parameters": [
                     {
                         "type": "string",
@@ -241,7 +242,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Рестораны | Moderator"
+                    "Рестораны",
+                    "Рестораны / Модератор"
                 ],
                 "summary": "Отмена верификации ресторана",
                 "parameters": [
@@ -283,7 +285,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Рестораны | Moderator"
+                    "Рестораны",
+                    "Рестораны / Модератор"
                 ],
                 "summary": "Верификция ресторана",
                 "parameters": [
@@ -325,9 +328,10 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Оценка | Public"
+                    "Оценка",
+                    "Оценка / Общедоступные"
                 ],
-                "summary": "Получение оценок из ревью",
+                "summary": "Получение оценок из обзора",
                 "parameters": [
                     {
                         "type": "string",
@@ -377,7 +381,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Обзоры | Public"
+                    "Обзоры"
                 ],
                 "summary": "Получить обзоры",
                 "parameters": [
@@ -469,7 +473,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Рестораны | Public"
+                    "Рестораны"
                 ],
                 "summary": "Получить рестораны",
                 "parameters": [
@@ -514,7 +518,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Рестораны | Public"
+                    "Рестораны"
                 ],
                 "summary": "Получить ресторан по ID",
                 "parameters": [

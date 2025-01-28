@@ -53,7 +53,7 @@ func (rh *ReviewHandler) CreateReview(c *fiber.Ctx) error {
 }
 
 // @Summary Получить обзоры
-// @Tags Обзоры | Public
+// @Tags Обзоры
 // @Accept json
 // @Produce json
 // @Param restaurantId path string true "ID ресторана"

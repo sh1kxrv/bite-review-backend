@@ -20,7 +20,7 @@ func NewRestaurantHandler(service *RestaurantService) *RestaurantHandler {
 }
 
 // @Summary Получить рестораны
-// @Tags Рестораны | Public
+// @Tags Рестораны
 // @Accept json
 // @Produce json
 // @Param limit query int false "Количество ресторанов"
@@ -38,7 +38,7 @@ func (rh *RestaurantHandler) GetRestaurants(c *fiber.Ctx) error {
 }
 
 // @Summary Получить ресторан по ID
-// @Tags Рестораны | Public
+// @Tags Рестораны
 // @Accept json
 // @Produce json
 // @Param id path string true "ID ресторана"
@@ -55,7 +55,7 @@ func (rh *RestaurantHandler) GetRestaurantById(c *fiber.Ctx) error {
 }
 
 // @Summary Регистрация ресторана в системе
-// @Tags Рестораны | Admin
+// @Tags Рестораны,Рестораны / Администратор
 // @Security ApiKeyAuth
 // @Accept json
 // @Produce json
@@ -82,7 +82,7 @@ func (rh *RestaurantHandler) setVerifyState(c *fiber.Ctx, verifyBool bool) error
 }
 
 // @Summary Верификция ресторана
-// @Tags Рестораны | Moderator
+// @Tags Рестораны,Рестораны / Модератор
 // @Security ApiKeyAuth
 // @Accept json
 // @Produce json
@@ -95,7 +95,7 @@ func (rh *RestaurantHandler) VerifyRestaurant(c *fiber.Ctx) error {
 }
 
 // @Summary Отмена верификации ресторана
-// @Tags Рестораны | Moderator
+// @Tags Рестораны,Рестораны / Модератор
 // @Security ApiKeyAuth
 // @Accept json
 // @Produce json

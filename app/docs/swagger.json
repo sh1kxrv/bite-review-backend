@@ -21,7 +21,8 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Рестораны | Admin"
+                    "Рестораны",
+                    "Рестораны / Администратор"
                 ],
                 "summary": "Регистрация ресторана в системе",
                 "parameters": [
@@ -184,7 +185,7 @@
                 "tags": [
                     "Оценка"
                 ],
-                "summary": "Добавление оценки в ревью",
+                "summary": "Добавление оценки в обзор",
                 "parameters": [
                     {
                         "type": "string",
@@ -233,7 +234,8 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Рестораны | Moderator"
+                    "Рестораны",
+                    "Рестораны / Модератор"
                 ],
                 "summary": "Отмена верификации ресторана",
                 "parameters": [
@@ -275,7 +277,8 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Рестораны | Moderator"
+                    "Рестораны",
+                    "Рестораны / Модератор"
                 ],
                 "summary": "Верификция ресторана",
                 "parameters": [
@@ -317,9 +320,10 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Оценка | Public"
+                    "Оценка",
+                    "Оценка / Общедоступные"
                 ],
-                "summary": "Получение оценок из ревью",
+                "summary": "Получение оценок из обзора",
                 "parameters": [
                     {
                         "type": "string",
@@ -369,7 +373,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Обзоры | Public"
+                    "Обзоры"
                 ],
                 "summary": "Получить обзоры",
                 "parameters": [
@@ -461,7 +465,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Рестораны | Public"
+                    "Рестораны"
                 ],
                 "summary": "Получить рестораны",
                 "parameters": [
@@ -506,7 +510,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Рестораны | Public"
+                    "Рестораны"
                 ],
                 "summary": "Получить ресторан по ID",
                 "parameters": [

@@ -236,7 +236,8 @@ paths:
       - ApiKeyAuth: []
       summary: Регистрация ресторана в системе
       tags:
-      - Рестораны | Admin
+      - Рестораны
+      - Рестораны / Администратор
   /api/v1/auth/login:
     post:
       consumes:
@@ -341,7 +342,7 @@ paths:
             $ref: '#/definitions/helper.ErrorResponse'
       security:
       - ApiKeyAuth: []
-      summary: Добавление оценки в ревью
+      summary: Добавление оценки в обзор
       tags:
       - Оценка
   /api/v1/moderator/restaurant/{id}/unverify:
@@ -369,7 +370,8 @@ paths:
       - ApiKeyAuth: []
       summary: Отмена верификации ресторана
       tags:
-      - Рестораны | Moderator
+      - Рестораны
+      - Рестораны / Модератор
   /api/v1/moderator/restaurant/{id}/verify:
     patch:
       consumes:
@@ -395,7 +397,8 @@ paths:
       - ApiKeyAuth: []
       summary: Верификция ресторана
       tags:
-      - Рестораны | Moderator
+      - Рестораны
+      - Рестораны / Модератор
   /api/v1/public/estimate/{reviewId}:
     get:
       consumes:
@@ -429,9 +432,10 @@ paths:
             $ref: '#/definitions/helper.ErrorResponse'
       security:
       - ApiKeyAuth: []
-      summary: Получение оценок из ревью
+      summary: Получение оценок из обзора
       tags:
-      - Оценка | Public
+      - Оценка
+      - Оценка / Общедоступные
   /api/v1/public/review/{restaurantId}:
     get:
       consumes:
@@ -465,7 +469,7 @@ paths:
             $ref: '#/definitions/helper.ErrorResponse'
       summary: Получить обзоры
       tags:
-      - Обзоры | Public
+      - Обзоры
     post:
       consumes:
       - application/json
@@ -519,7 +523,7 @@ paths:
             $ref: '#/definitions/helper.ErrorResponse'
       summary: Получить рестораны
       tags:
-      - Рестораны | Public
+      - Рестораны
   /api/v1/restaurant/{id}:
     get:
       consumes:
@@ -543,7 +547,7 @@ paths:
             $ref: '#/definitions/helper.ErrorResponse'
       summary: Получить ресторан по ID
       tags:
-      - Рестораны | Public
+      - Рестораны
   /api/v1/user/me:
     get:
       consumes:

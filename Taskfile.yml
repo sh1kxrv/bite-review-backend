@@ -5,6 +5,9 @@ tasks:
     dir: 'app'
     cmds:
       - go run ./main.go
+  tool:swagsorter:
+    cmds:
+      - node ./tools/swagsorter/index.mjs
   swag:
     dir: 'app'
     cmds:
