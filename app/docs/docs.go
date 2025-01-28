@@ -39,7 +39,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/serializer.CreateRestaurantDTO"
+                            "$ref": "#/definitions/restaurant.CreateRestaurantDTO"
                         }
                     }
                 ],
@@ -47,7 +47,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schema.Restaurant"
+                            "$ref": "#/definitions/entity.Restaurant"
                         }
                     },
                     "400": {
@@ -78,7 +78,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/serializer.AuthDataLogin"
+                            "$ref": "#/definitions/auth.AuthDataLogin"
                         }
                     }
                 ],
@@ -86,7 +86,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/service.JwtPair"
+                            "$ref": "#/definitions/auth.JwtPair"
                         }
                     },
                     "400": {
@@ -117,7 +117,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/serializer.AuthDataRefresh"
+                            "$ref": "#/definitions/auth.AuthDataRefresh"
                         }
                     }
                 ],
@@ -125,7 +125,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/service.JwtPair"
+                            "$ref": "#/definitions/auth.JwtPair"
                         }
                     },
                     "400": {
@@ -156,7 +156,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/serializer.AuthDataRegister"
+                            "$ref": "#/definitions/auth.AuthDataRegister"
                         }
                     }
                 ],
@@ -164,7 +164,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/service.JwtPair"
+                            "$ref": "#/definitions/auth.JwtPair"
                         }
                     },
                     "400": {
@@ -208,7 +208,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/schema.Estimate"
+                                "$ref": "#/definitions/entity.Estimate"
                             }
                         }
                     },
@@ -250,7 +250,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/serializer.CreateEstimateDTO"
+                            "$ref": "#/definitions/estimate.CreateEstimateDTO"
                         }
                     }
                 ],
@@ -258,7 +258,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schema.Estimate"
+                            "$ref": "#/definitions/entity.Estimate"
                         }
                     },
                     "400": {
@@ -369,7 +369,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Количество садов",
+                        "description": "Количество ресторанов",
                         "name": "limit",
                         "in": "query"
                     },
@@ -386,7 +386,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/schema.Restaurant"
+                                "$ref": "#/definitions/entity.Restaurant"
                             }
                         }
                     },
@@ -424,7 +424,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schema.Restaurant"
+                            "$ref": "#/definitions/entity.Restaurant"
                         }
                     },
                     "400": {
@@ -457,7 +457,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schema.User"
+                            "$ref": "#/definitions/entity.User"
                         }
                     },
                     "400": {
@@ -471,44 +471,77 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "enum.Role": {
-            "type": "string",
-            "enum": [
-                "critic",
-                "restorer",
-                "moderator",
-                "admin",
-                "helper"
-            ],
-            "x-enum-varnames": [
-                "RoleCritic",
-                "RoleRestorer",
-                "RoleModerator",
-                "RoleAdmin",
-                "RoleHelper"
-            ]
-        },
-        "helper.ErrorResponse": {
+        "auth.AuthDataLogin": {
             "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
             "properties": {
-                "code": {
-                    "type": "integer"
+                "email": {
+                    "type": "string"
                 },
-                "message": {
+                "password": {
                     "type": "string"
                 }
             }
         },
-        "helper.Response": {
+        "auth.AuthDataRefresh": {
             "type": "object",
+            "required": [
+                "refreshToken"
+            ],
             "properties": {
-                "data": {},
-                "status": {
-                    "type": "boolean"
+                "refreshToken": {
+                    "type": "string"
                 }
             }
         },
-        "schema.Estimate": {
+        "auth.AuthDataRegister": {
+            "type": "object",
+            "required": [
+                "email",
+                "firstName",
+                "lastName",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 2
+                },
+                "lastName": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 2
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "auth.JwtPair": {
+            "type": "object",
+            "properties": {
+                "accessExpiresIn": {
+                    "type": "string"
+                },
+                "accessToken": {
+                    "type": "string"
+                },
+                "refreshExpiresIn": {
+                    "type": "string"
+                },
+                "refreshToken": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.Estimate": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -531,7 +564,7 @@ const docTemplate = `{
                 }
             }
         },
-        "schema.Restaurant": {
+        "entity.Restaurant": {
             "type": "object",
             "properties": {
                 "address": {
@@ -576,7 +609,7 @@ const docTemplate = `{
                 }
             }
         },
-        "schema.User": {
+        "entity.User": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -614,60 +647,24 @@ const docTemplate = `{
                 }
             }
         },
-        "serializer.AuthDataLogin": {
-            "type": "object",
-            "required": [
-                "email",
-                "password"
+        "enum.Role": {
+            "type": "string",
+            "enum": [
+                "critic",
+                "restorer",
+                "moderator",
+                "admin",
+                "helper"
             ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                }
-            }
+            "x-enum-varnames": [
+                "RoleCritic",
+                "RoleRestorer",
+                "RoleModerator",
+                "RoleAdmin",
+                "RoleHelper"
+            ]
         },
-        "serializer.AuthDataRefresh": {
-            "type": "object",
-            "required": [
-                "refreshToken"
-            ],
-            "properties": {
-                "refreshToken": {
-                    "type": "string"
-                }
-            }
-        },
-        "serializer.AuthDataRegister": {
-            "type": "object",
-            "required": [
-                "email",
-                "firstName",
-                "lastName",
-                "password"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "firstName": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "minLength": 2
-                },
-                "lastName": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "minLength": 2
-                },
-                "password": {
-                    "type": "string"
-                }
-            }
-        },
-        "serializer.CreateEstimateDTO": {
+        "estimate.CreateEstimateDTO": {
             "type": "object",
             "required": [
                 "description",
@@ -692,7 +689,27 @@ const docTemplate = `{
                 }
             }
         },
-        "serializer.CreateRestaurantDTO": {
+        "helper.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "helper.Response": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "status": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "restaurant.CreateRestaurantDTO": {
             "type": "object",
             "required": [
                 "name"
@@ -730,23 +747,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "site": {
-                    "type": "string"
-                }
-            }
-        },
-        "service.JwtPair": {
-            "type": "object",
-            "properties": {
-                "accessExpiresIn": {
-                    "type": "string"
-                },
-                "accessToken": {
-                    "type": "string"
-                },
-                "refreshExpiresIn": {
-                    "type": "string"
-                },
-                "refreshToken": {
                     "type": "string"
                 }
             }

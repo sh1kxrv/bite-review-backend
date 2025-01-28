@@ -1,32 +1,53 @@
 definitions:
-  enum.Role:
-    enum:
-    - critic
-    - restorer
-    - moderator
-    - admin
-    - helper
-    type: string
-    x-enum-varnames:
-    - RoleCritic
-    - RoleRestorer
-    - RoleModerator
-    - RoleAdmin
-    - RoleHelper
-  helper.ErrorResponse:
+  auth.AuthDataLogin:
     properties:
-      code:
-        type: integer
-      message:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  auth.AuthDataRefresh:
+    properties:
+      refreshToken:
+        type: string
+    required:
+    - refreshToken
+    type: object
+  auth.AuthDataRegister:
+    properties:
+      email:
+        type: string
+      firstName:
+        maxLength: 50
+        minLength: 2
+        type: string
+      lastName:
+        maxLength: 50
+        minLength: 2
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - firstName
+    - lastName
+    - password
+    type: object
+  auth.JwtPair:
+    properties:
+      accessExpiresIn:
+        type: string
+      accessToken:
+        type: string
+      refreshExpiresIn:
+        type: string
+      refreshToken:
         type: string
     type: object
-  helper.Response:
-    properties:
-      data: {}
-      status:
-        type: boolean
-    type: object
-  schema.Estimate:
+  entity.Estimate:
     properties:
       createdAt:
         type: string
@@ -41,7 +62,7 @@ definitions:
       value:
         type: integer
     type: object
-  schema.Restaurant:
+  entity.Restaurant:
     properties:
       address:
         type: string
@@ -71,7 +92,7 @@ definitions:
       updatedAt:
         type: string
     type: object
-  schema.User:
+  entity.User:
     properties:
       createdAt:
         type: string
@@ -96,44 +117,21 @@ definitions:
       verifiedBy:
         type: string
     type: object
-  serializer.AuthDataLogin:
-    properties:
-      email:
-        type: string
-      password:
-        type: string
-    required:
-    - email
-    - password
-    type: object
-  serializer.AuthDataRefresh:
-    properties:
-      refreshToken:
-        type: string
-    required:
-    - refreshToken
-    type: object
-  serializer.AuthDataRegister:
-    properties:
-      email:
-        type: string
-      firstName:
-        maxLength: 50
-        minLength: 2
-        type: string
-      lastName:
-        maxLength: 50
-        minLength: 2
-        type: string
-      password:
-        type: string
-    required:
-    - email
-    - firstName
-    - lastName
-    - password
-    type: object
-  serializer.CreateEstimateDTO:
+  enum.Role:
+    enum:
+    - critic
+    - restorer
+    - moderator
+    - admin
+    - helper
+    type: string
+    x-enum-varnames:
+    - RoleCritic
+    - RoleRestorer
+    - RoleModerator
+    - RoleAdmin
+    - RoleHelper
+  estimate.CreateEstimateDTO:
     properties:
       description:
         maxLength: 50
@@ -152,7 +150,20 @@ definitions:
     - name
     - value
     type: object
-  serializer.CreateRestaurantDTO:
+  helper.ErrorResponse:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+  helper.Response:
+    properties:
+      data: {}
+      status:
+        type: boolean
+    type: object
+  restaurant.CreateRestaurantDTO:
     properties:
       address:
         type: string
@@ -180,17 +191,6 @@ definitions:
     required:
     - name
     type: object
-  service.JwtPair:
-    properties:
-      accessExpiresIn:
-        type: string
-      accessToken:
-        type: string
-      refreshExpiresIn:
-        type: string
-      refreshToken:
-        type: string
-    type: object
 host: 127.0.0.1:3000
 info:
   contact: {}
@@ -207,14 +207,14 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/serializer.CreateRestaurantDTO'
+          $ref: '#/definitions/restaurant.CreateRestaurantDTO'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/schema.Restaurant'
+            $ref: '#/definitions/entity.Restaurant'
         "400":
           description: Bad Request
           schema:
@@ -234,14 +234,14 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/serializer.AuthDataLogin'
+          $ref: '#/definitions/auth.AuthDataLogin'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/service.JwtPair'
+            $ref: '#/definitions/auth.JwtPair'
         "400":
           description: Bad Request
           schema:
@@ -259,14 +259,14 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/serializer.AuthDataRefresh'
+          $ref: '#/definitions/auth.AuthDataRefresh'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/service.JwtPair'
+            $ref: '#/definitions/auth.JwtPair'
         "400":
           description: Bad Request
           schema:
@@ -284,14 +284,14 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/serializer.AuthDataRegister'
+          $ref: '#/definitions/auth.AuthDataRegister'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/service.JwtPair'
+            $ref: '#/definitions/auth.JwtPair'
         "400":
           description: Bad Request
           schema:
@@ -316,7 +316,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/schema.Estimate'
+              $ref: '#/definitions/entity.Estimate'
             type: array
         "400":
           description: Bad Request
@@ -341,14 +341,14 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/serializer.CreateEstimateDTO'
+          $ref: '#/definitions/estimate.CreateEstimateDTO'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/schema.Estimate'
+            $ref: '#/definitions/entity.Estimate'
         "400":
           description: Bad Request
           schema:
@@ -415,7 +415,7 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: Количество садов
+      - description: Количество ресторанов
         in: query
         name: limit
         type: integer
@@ -430,7 +430,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/schema.Restaurant'
+              $ref: '#/definitions/entity.Restaurant'
             type: array
         "400":
           description: Bad Request
@@ -455,7 +455,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/schema.Restaurant'
+            $ref: '#/definitions/entity.Restaurant'
         "400":
           description: Bad Request
           schema:
@@ -473,7 +473,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/schema.User'
+            $ref: '#/definitions/entity.User'
         "400":
           description: Bad Request
           schema:

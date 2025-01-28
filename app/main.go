@@ -4,10 +4,7 @@ import (
 	"bitereview/cache/memcache"
 	"bitereview/config"
 	"bitereview/database"
-	"bitereview/handler"
-	"bitereview/repository"
-	"bitereview/router"
-	"bitereview/service"
+	"bitereview/module"
 	"context"
 	"os"
 	"os/signal"
@@ -65,7 +62,7 @@ func main() {
 
 	app.Get("/swagger/*", swagger.HandlerDefault)
 
-	InitRouter(app)
+	module.InitRouter(app)
 
 	// Graceful shutdown
 	quit := make(chan os.Signal, 1)
@@ -97,36 +94,6 @@ func InitViper() error {
 	viper.SetConfigType("json")
 	viper.AddConfigPath(".")
 	return viper.ReadInConfig()
-}
-
-func InitRouter(app *fiber.App) {
-	// Repositories
-	userRepository := repository.NewUserRepository()
-	restaurantRepository := repository.NewRestaurantRepository()
-	reviewRepository := repository.NewReviewRepository()
-	estimateRepository := repository.NewEstimateRepository()
-
-	// Services
-	estimateService := service.NewEstimateService(estimateRepository, reviewRepository)
-	restaurantService := service.NewRestaurantService(restaurantRepository)
-	reviewService := service.NewReviewService(reviewRepository)
-	userService := service.NewUserService(userRepository)
-	authService := service.NewAuthService(userRepository)
-
-	// Handlers
-	userHandler := handler.NewUserHandler(userService)
-	authHandler := handler.NewAuthHandler(authService)
-	restaurantHandler := handler.NewRestaurantHandler(restaurantService)
-	reviewHandler := handler.NewReviewHandler(reviewService)
-	estimateHandler := handler.NewEstimateHandler(estimateService)
-
-	// Router
-	appRouter := router.NewAppRouter(
-		userHandler, authHandler, restaurantHandler,
-		reviewHandler, estimateHandler,
-	)
-
-	appRouter.RegisterRoutes(app)
 }
 
 func InitLogrus() {
