@@ -1,7 +1,7 @@
 package estimate
 
 import (
-	"bitereview/database"
+	"bitereview/database/mongodb"
 	"bitereview/entity"
 	"bitereview/repository"
 	"bitereview/utils"
@@ -19,10 +19,10 @@ type EstimateRepository struct {
 	Collection *mongo.Collection
 }
 
-func NewEstimateRepository() *EstimateRepository {
+func NewEstimateRepository(db *mongodb.MongoInstance) *EstimateRepository {
 	return &EstimateRepository{
-		Collection:     database.GetCollection(EstimateCollection),
-		CrudRepository: repository.NewCrudRepository[entity.Estimate](EstimateCollection),
+		Collection:     db.GetCollection(EstimateCollection),
+		CrudRepository: repository.NewCrudRepository[entity.Estimate](EstimateCollection, db),
 	}
 }
 

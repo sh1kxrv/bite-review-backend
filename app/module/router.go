@@ -1,6 +1,7 @@
 package module
 
 import (
+	"bitereview/database/mongodb"
 	"bitereview/module/auth"
 	"bitereview/module/estimate"
 	"bitereview/module/restaurant"
@@ -10,7 +11,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func InitRouter(app *fiber.App) {
+func InitRouter(app *fiber.App, db *mongodb.MongoInstance) {
 	api := app.Group("/api")
 
 	v1 := api.Group("/v1", func(c *fiber.Ctx) error {
@@ -19,10 +20,10 @@ func InitRouter(app *fiber.App) {
 	})
 
 	// Repositories
-	userRepository := user.NewUserRepository()
-	restaurantRepository := restaurant.NewRestaurantRepository()
-	reviewRepository := review.NewReviewRepository()
-	estimateRepository := estimate.NewEstimateRepository()
+	userRepository := user.NewUserRepository(db)
+	restaurantRepository := restaurant.NewRestaurantRepository(db)
+	reviewRepository := review.NewReviewRepository(db)
+	estimateRepository := estimate.NewEstimateRepository(db)
 
 	// Services
 	estimateService := estimate.NewEstimateService(estimateRepository, reviewRepository)

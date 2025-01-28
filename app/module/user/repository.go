@@ -1,7 +1,7 @@
 package user
 
 import (
-	"bitereview/database"
+	"bitereview/database/mongodb"
 	"bitereview/entity"
 	"bitereview/repository"
 	"context"
@@ -19,10 +19,10 @@ type UserRepository struct {
 	Collection *mongo.Collection
 }
 
-func NewUserRepository() *UserRepository {
+func NewUserRepository(db *mongodb.MongoInstance) *UserRepository {
 	return &UserRepository{
-		Collection:     database.GetCollection(UserCollection),
-		CrudRepository: repository.NewCrudRepository[entity.User](UserCollection),
+		Collection:     db.GetCollection(UserCollection),
+		CrudRepository: repository.NewCrudRepository[entity.User](UserCollection, db),
 	}
 }
 

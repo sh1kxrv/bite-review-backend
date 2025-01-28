@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"bitereview/database"
+	"bitereview/database/mongodb"
 	"bitereview/utils"
 	"context"
 
@@ -14,9 +14,9 @@ type CrudRepository[T any] struct {
 	Collection *mongo.Collection
 }
 
-func NewCrudRepository[T any](name string) CrudRepository[T] {
+func NewCrudRepository[T any](name string, db *mongodb.MongoInstance) CrudRepository[T] {
 	return CrudRepository[T]{
-		Collection: database.GetCollection(name),
+		Collection: db.GetCollection(name),
 	}
 }
 

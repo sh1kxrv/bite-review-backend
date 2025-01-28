@@ -1,7 +1,7 @@
 package review
 
 import (
-	"bitereview/database"
+	"bitereview/database/mongodb"
 	"bitereview/entity"
 	"bitereview/repository"
 
@@ -15,9 +15,9 @@ type ReviewRepository struct {
 	Collection *mongo.Collection
 }
 
-func NewReviewRepository() *ReviewRepository {
+func NewReviewRepository(db *mongodb.MongoInstance) *ReviewRepository {
 	return &ReviewRepository{
-		Collection:     database.GetCollection(ReviewCollection),
-		CrudRepository: repository.NewCrudRepository[entity.Review](ReviewCollection),
+		Collection:     db.GetCollection(ReviewCollection),
+		CrudRepository: repository.NewCrudRepository[entity.Review](ReviewCollection, db),
 	}
 }

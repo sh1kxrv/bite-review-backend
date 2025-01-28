@@ -1,7 +1,7 @@
 package restaurant
 
 import (
-	"bitereview/database"
+	"bitereview/database/mongodb"
 	"bitereview/entity"
 	"bitereview/repository"
 	"context"
@@ -18,10 +18,10 @@ type RestaurantRepository struct {
 	Collection *mongo.Collection
 }
 
-func NewRestaurantRepository() *RestaurantRepository {
+func NewRestaurantRepository(db *mongodb.MongoInstance) *RestaurantRepository {
 	return &RestaurantRepository{
-		Collection:     database.GetCollection(RestaurantCollection),
-		CrudRepository: repository.NewCrudRepository[entity.Restaurant](RestaurantCollection),
+		Collection:     db.GetCollection(RestaurantCollection),
+		CrudRepository: repository.NewCrudRepository[entity.Restaurant](RestaurantCollection, db),
 	}
 }
 

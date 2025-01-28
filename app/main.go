@@ -3,7 +3,7 @@ package main
 import (
 	"bitereview/cache/memcache"
 	"bitereview/config"
-	"bitereview/database"
+	"bitereview/database/mongodb"
 	"bitereview/module"
 	"context"
 	"os"
@@ -43,13 +43,12 @@ func main() {
 
 	logrus.Info("Database initialization")
 
-	database.InitMongo(cfg)
+	db, err := mongodb.NewMongoInstance(cfg)
+	if err != nil {
+		logrus.Fatalf("Failed to connect to mongodb: %s", err.Error())
+	}
 
 	memoryCache := InitMemoryCache(memoryCacheContext)
-
-	if err := database.MongoClient.Ping(context.TODO(), nil); err != nil {
-		logrus.Fatalf("Failed to ping mongodb: %s", err.Error())
-	}
 
 	var app = fiber.New(fiber.Config{
 		ServerHeader: "BiteReview-Server",
@@ -62,7 +61,7 @@ func main() {
 
 	app.Get("/swagger/*", swagger.HandlerDefault)
 
-	module.InitRouter(app)
+	module.InitRouter(app, db)
 
 	// Graceful shutdown
 	quit := make(chan os.Signal, 1)
@@ -71,7 +70,7 @@ func main() {
 	go func() {
 		<-quit
 		logrus.Debug("Graceful shutdown...")
-		if err := database.MongoClient.Disconnect(context.Background()); err != nil {
+		if err := db.Client.Disconnect(context.Background()); err != nil {
 			logrus.Fatalf("Error disconnecting from MongoDB: %v", err)
 		}
 		logrus.Debug("Connection to MongoDB closed.")
