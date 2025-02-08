@@ -6,7 +6,6 @@ import (
 	"time"
 )
 
-// Каждые 25 секунд
 var CLEANUP_TIMEOUT = 25 * time.Second
 
 type CacheItem struct {
@@ -14,7 +13,6 @@ type CacheItem struct {
 	Expiration int64
 }
 
-// NOTE: Кэширование памятью
 type MemoryCache struct {
 	items map[string]CacheItem
 	mu    sync.RWMutex

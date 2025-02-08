@@ -1,5 +1,0 @@
-function bootstrap(){
-  // TODO:
-}
-
-bootstrap()

@@ -15,7 +15,7 @@ var (
 func GetValidatorInstance() *validator.Validate {
 	once.Do(func() {
 		vinstance = validator.New()
-		vinstance.RegisterValidation("cdnURL", validation.CdnUrlValidation)
+		vinstance.RegisterValidation("cdnURL", validation.CdnURLValidation)
 	})
 	return vinstance
 }
