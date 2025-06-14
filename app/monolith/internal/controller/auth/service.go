@@ -8,6 +8,7 @@ import (
 	"shared/enum"
 	"shared/errors"
 	"shared/transfer/dto"
+	"shared/transfer/ro"
 	"shared/utils"
 	"shared/utils/crypto"
 	"shared/utils/helper"
@@ -19,13 +20,6 @@ import (
 
 type AuthService struct {
 	userRepo *repository.UserRepository
-}
-
-type JwtPair struct {
-	AccessToken      string  `json:"accessToken"`
-	RefreshToken     *string `json:"refreshToken"`
-	AccessExpiresIn  string  `json:"accessExpiresIn"`
-	RefreshExpiresIn *string `json:"refreshExpiresIn"`
 }
 
 func NewAuthService(userRepo *repository.UserRepository) *AuthService {
@@ -54,20 +48,20 @@ func (h *AuthService) createJwt(user *entity.User, key string, duration time.Dur
 	return ss, expiresAt, err
 }
 
-func (h *AuthService) createJwtPair(user *entity.User) (JwtPair, error) {
+func (h *AuthService) createJwtPair(user *entity.User) (ro.JwtPair, error) {
 	accessToken, expAccess, accessErr := h.createJwt(user, config.C.Jwt.Secret, time.Duration(config.C.Jwt.Expire))
 	if accessErr != nil {
-		return JwtPair{}, accessErr
+		return ro.JwtPair{}, accessErr
 	}
 	refreshToken, expRefresh, refreshErr := h.createJwt(user, config.C.Jwt.RefreshSecret, time.Duration(config.C.Jwt.RefreshExpire))
 	if refreshErr != nil {
-		return JwtPair{}, refreshErr
+		return ro.JwtPair{}, refreshErr
 	}
 
 	expRefreshFormatted := expRefresh.Format(time.RFC3339)
 	expAccessFormatted := expAccess.Format(time.RFC3339)
 
-	return JwtPair{
+	return ro.JwtPair{
 		AccessToken:      accessToken,
 		RefreshToken:     &refreshToken,
 		AccessExpiresIn:  expAccessFormatted,
@@ -75,7 +69,7 @@ func (h *AuthService) createJwtPair(user *entity.User) (JwtPair, error) {
 	}, nil
 }
 
-func (h *AuthService) Login(email, password string) (*JwtPair, *helper.ServiceError) {
+func (h *AuthService) Login(email, password string) (*ro.JwtPair, *helper.ServiceError) {
 	withTimeout, cancel := utils.CreateContextTimeout(15)
 	defer cancel()
 
@@ -102,7 +96,7 @@ func (h *AuthService) Login(email, password string) (*JwtPair, *helper.ServiceEr
 	return &pair, nil
 }
 
-func (h *AuthService) Register(authData *dto.AuthDataRegister) (*JwtPair, *helper.ServiceError) {
+func (h *AuthService) Register(authData *dto.AuthDataRegister) (*ro.JwtPair, *helper.ServiceError) {
 	ctx, cancel := utils.CreateContextTimeout(15)
 	defer cancel()
 
@@ -137,7 +131,7 @@ func (h *AuthService) Register(authData *dto.AuthDataRegister) (*JwtPair, *helpe
 }
 
 // FIXME: Добавить проверку JWT AccessToken'а в Header's с игнором exp. времени
-func (h *AuthService) Refresh(refreshToken string) (*JwtPair, *helper.ServiceError) {
+func (h *AuthService) Refresh(refreshToken string) (*ro.JwtPair, *helper.ServiceError) {
 	parsed, err := utils.ParseJwtToken(refreshToken, config.C.Jwt.RefreshSecret)
 	if err != nil {
 		return nil, helper.NewServiceError(err, errors.JwtRefreshTokenInvalid)
@@ -161,7 +155,7 @@ func (h *AuthService) Refresh(refreshToken string) (*JwtPair, *helper.ServiceErr
 		return nil, helper.NewServiceError(err, errors.JwtPairGenerationError)
 	}
 
-	return &JwtPair{
+	return &ro.JwtPair{
 		AccessToken:      accessToken,
 		AccessExpiresIn:  expAccess.Format(time.RFC3339),
 		RefreshToken:     nil,

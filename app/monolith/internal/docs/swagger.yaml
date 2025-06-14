@@ -1,5 +1,5 @@
 definitions:
-  auth.AuthDataLogin:
+  dto.AuthDataLogin:
     properties:
       email:
         type: string
@@ -9,14 +9,14 @@ definitions:
     - email
     - password
     type: object
-  auth.AuthDataRefresh:
+  dto.AuthDataRefresh:
     properties:
       refreshToken:
         type: string
     required:
     - refreshToken
     type: object
-  auth.AuthDataRegister:
+  dto.AuthDataRegister:
     properties:
       email:
         type: string
@@ -36,16 +36,52 @@ definitions:
     - lastName
     - password
     type: object
-  auth.JwtPair:
+  dto.CreateEstimateDTO:
     properties:
-      accessExpiresIn:
+      description:
+        maxLength: 50
+        minLength: 2
         type: string
-      accessToken:
+      name:
+        maxLength: 50
+        minLength: 2
         type: string
-      refreshExpiresIn:
+      value:
+        maximum: 100
+        minimum: 1
+        type: integer
+    required:
+    - description
+    - name
+    - value
+    type: object
+  dto.CreateRestaurantDTO:
+    properties:
+      address:
         type: string
-      refreshToken:
+      city:
         type: string
+      country:
+        type: string
+      description:
+        type: string
+      images:
+        items:
+          type: string
+        type: array
+      kitchenType:
+        items:
+          type: string
+        type: array
+      metadata:
+        additionalProperties: {}
+        type: object
+      name:
+        type: string
+      site:
+        type: string
+    required:
+    - name
     type: object
   entity.Estimate:
     properties:
@@ -144,25 +180,6 @@ definitions:
     - RoleModerator
     - RoleAdmin
     - RoleHelper
-  estimate.CreateEstimateDTO:
-    properties:
-      description:
-        maxLength: 50
-        minLength: 2
-        type: string
-      name:
-        maxLength: 50
-        minLength: 2
-        type: string
-      value:
-        maximum: 100
-        minimum: 1
-        type: integer
-    required:
-    - description
-    - name
-    - value
-    type: object
   helper.ErrorResponse:
     properties:
       code:
@@ -176,33 +193,16 @@ definitions:
       status:
         type: boolean
     type: object
-  restaurant.CreateRestaurantDTO:
+  ro.JwtPair:
     properties:
-      address:
+      accessExpiresIn:
         type: string
-      city:
+      accessToken:
         type: string
-      country:
+      refreshExpiresIn:
         type: string
-      description:
+      refreshToken:
         type: string
-      images:
-        items:
-          type: string
-        type: array
-      kitchenType:
-        items:
-          type: string
-        type: array
-      metadata:
-        additionalProperties: {}
-        type: object
-      name:
-        type: string
-      site:
-        type: string
-    required:
-    - name
     type: object
 host: 127.0.0.1:3000
 info:
@@ -220,7 +220,7 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/restaurant.CreateRestaurantDTO'
+          $ref: '#/definitions/dto.CreateRestaurantDTO'
       produces:
       - application/json
       responses:
@@ -248,14 +248,14 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/auth.AuthDataLogin'
+          $ref: '#/definitions/dto.AuthDataLogin'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.JwtPair'
+            $ref: '#/definitions/ro.JwtPair'
         "400":
           description: Bad Request
           schema:
@@ -273,14 +273,14 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/auth.AuthDataRefresh'
+          $ref: '#/definitions/dto.AuthDataRefresh'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.JwtPair'
+            $ref: '#/definitions/ro.JwtPair'
         "400":
           description: Bad Request
           schema:
@@ -298,14 +298,14 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/auth.AuthDataRegister'
+          $ref: '#/definitions/dto.AuthDataRegister'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.JwtPair'
+            $ref: '#/definitions/ro.JwtPair'
         "400":
           description: Bad Request
           schema:
@@ -328,7 +328,7 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/estimate.CreateEstimateDTO'
+          $ref: '#/definitions/dto.CreateEstimateDTO'
       produces:
       - application/json
       responses:

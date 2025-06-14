@@ -40,7 +40,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/restaurant.CreateRestaurantDTO"
+                            "$ref": "#/definitions/dto.CreateRestaurantDTO"
                         }
                     }
                 ],
@@ -79,7 +79,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/auth.AuthDataLogin"
+                            "$ref": "#/definitions/dto.AuthDataLogin"
                         }
                     }
                 ],
@@ -87,7 +87,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.JwtPair"
+                            "$ref": "#/definitions/ro.JwtPair"
                         }
                     },
                     "400": {
@@ -118,7 +118,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/auth.AuthDataRefresh"
+                            "$ref": "#/definitions/dto.AuthDataRefresh"
                         }
                     }
                 ],
@@ -126,7 +126,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.JwtPair"
+                            "$ref": "#/definitions/ro.JwtPair"
                         }
                     },
                     "400": {
@@ -157,7 +157,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/auth.AuthDataRegister"
+                            "$ref": "#/definitions/dto.AuthDataRegister"
                         }
                     }
                 ],
@@ -165,7 +165,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.JwtPair"
+                            "$ref": "#/definitions/ro.JwtPair"
                         }
                     },
                     "400": {
@@ -208,7 +208,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/estimate.CreateEstimateDTO"
+                            "$ref": "#/definitions/dto.CreateEstimateDTO"
                         }
                     }
                 ],
@@ -581,7 +581,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "auth.AuthDataLogin": {
+        "dto.AuthDataLogin": {
             "type": "object",
             "required": [
                 "email",
@@ -596,7 +596,7 @@ const docTemplate = `{
                 }
             }
         },
-        "auth.AuthDataRefresh": {
+        "dto.AuthDataRefresh": {
             "type": "object",
             "required": [
                 "refreshToken"
@@ -607,7 +607,7 @@ const docTemplate = `{
                 }
             }
         },
-        "auth.AuthDataRegister": {
+        "dto.AuthDataRegister": {
             "type": "object",
             "required": [
                 "email",
@@ -634,19 +634,69 @@ const docTemplate = `{
                 }
             }
         },
-        "auth.JwtPair": {
+        "dto.CreateEstimateDTO": {
             "type": "object",
+            "required": [
+                "description",
+                "name",
+                "value"
+            ],
             "properties": {
-                "accessExpiresIn": {
+                "description": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 2
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 2
+                },
+                "value": {
+                    "type": "integer",
+                    "maximum": 100,
+                    "minimum": 1
+                }
+            }
+        },
+        "dto.CreateRestaurantDTO": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "address": {
                     "type": "string"
                 },
-                "accessToken": {
+                "city": {
                     "type": "string"
                 },
-                "refreshExpiresIn": {
+                "country": {
                     "type": "string"
                 },
-                "refreshToken": {
+                "description": {
+                    "type": "string"
+                },
+                "images": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "kitchenType": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "metadata": {
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "name": {
+                    "type": "string"
+                },
+                "site": {
                     "type": "string"
                 }
             }
@@ -794,31 +844,6 @@ const docTemplate = `{
                 "RoleHelper"
             ]
         },
-        "estimate.CreateEstimateDTO": {
-            "type": "object",
-            "required": [
-                "description",
-                "name",
-                "value"
-            ],
-            "properties": {
-                "description": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "minLength": 2
-                },
-                "name": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "minLength": 2
-                },
-                "value": {
-                    "type": "integer",
-                    "maximum": 100,
-                    "minimum": 1
-                }
-            }
-        },
         "helper.ErrorResponse": {
             "type": "object",
             "properties": {
@@ -839,44 +864,19 @@ const docTemplate = `{
                 }
             }
         },
-        "restaurant.CreateRestaurantDTO": {
+        "ro.JwtPair": {
             "type": "object",
-            "required": [
-                "name"
-            ],
             "properties": {
-                "address": {
+                "accessExpiresIn": {
                     "type": "string"
                 },
-                "city": {
+                "accessToken": {
                     "type": "string"
                 },
-                "country": {
+                "refreshExpiresIn": {
                     "type": "string"
                 },
-                "description": {
-                    "type": "string"
-                },
-                "images": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "kitchenType": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "metadata": {
-                    "type": "object",
-                    "additionalProperties": {}
-                },
-                "name": {
-                    "type": "string"
-                },
-                "site": {
+                "refreshToken": {
                     "type": "string"
                 }
             }

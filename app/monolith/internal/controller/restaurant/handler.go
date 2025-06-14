@@ -60,7 +60,7 @@ func (rh *RestaurantHandler) GetRestaurantById(c *fiber.Ctx) error {
 // @Security ApiKeyAuth
 // @Accept json
 // @Produce json
-// @Param data body restaurant.CreateRestaurantDTO true "Данные регистрации ресторана"
+// @Param data body dto.CreateRestaurantDTO true "Данные регистрации ресторана"
 // @Success 200 {object} entity.Restaurant
 // @Failure 400 {object} helper.ErrorResponse
 // @Router /api/v1/admin/restaurant [post]

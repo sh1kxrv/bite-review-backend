@@ -22,8 +22,8 @@ func NewAuthHandler(authService *AuthService) *AuthHandler {
 // @Tags Авторизация
 // @Accept json
 // @Produce json
-// @Param data body auth.AuthDataLogin true "Авторизационные данные"
-// @Success 200 {object} auth.JwtPair
+// @Param data body dto.AuthDataLogin true "Авторизационные данные"
+// @Success 200 {object} ro.JwtPair
 // @Failure 400 {object} helper.ErrorResponse
 // @Router /api/v1/auth/login [post]
 func (h *AuthHandler) Login(c *fiber.Ctx) error {
@@ -41,8 +41,8 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 // @Tags Авторизация
 // @Accept json
 // @Produce json
-// @Param data body auth.AuthDataRegister true "Данные регистрации"
-// @Success 200 {object} auth.JwtPair
+// @Param data body dto.AuthDataRegister true "Данные регистрации"
+// @Success 200 {object} ro.JwtPair
 // @Failure 400 {object} helper.ErrorResponse
 // @Router /api/v1/auth/register [post]
 func (h *AuthHandler) Register(c *fiber.Ctx) error {
@@ -60,8 +60,8 @@ func (h *AuthHandler) Register(c *fiber.Ctx) error {
 // @Tags Авторизация
 // @Accept json
 // @Produce json
-// @Param data body auth.AuthDataRefresh true "Данные обновления токена"
-// @Success 200 {object} auth.JwtPair
+// @Param data body dto.AuthDataRefresh true "Данные обновления токена"
+// @Success 200 {object} ro.JwtPair
 // @Failure 400 {object} helper.ErrorResponse
 // @Router /api/v1/auth/refresh [post]
 func (h *AuthHandler) Refresh(c *fiber.Ctx) error {

@@ -49,7 +49,7 @@ func (sh *EstimateHandler) GetEstimatesByReviewId(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param reviewId path string true "ID review"
-// @Param data body CreateEstimateDTO true "Оценка"
+// @Param data body dto.CreateEstimateDTO true "Оценка"
 // @Success 200 {object} entity.Estimate
 // @Failure 400 {object} helper.ErrorResponse
 // @Router /api/v1/estimate/{reviewId} [post]

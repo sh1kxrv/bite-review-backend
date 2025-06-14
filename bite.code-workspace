@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"name": "+ROOT",
+			"path": "."
+		},
+		{
+			"name": "Service : REST",
+			"path": "./app/monolith"
+		},
+		{
+			"name": "Library : Shared",
+			"path": "./lib/shared"
+		},
+	],
+	"settings": {}
+}
