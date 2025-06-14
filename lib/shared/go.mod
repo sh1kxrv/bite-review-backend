@@ -7,7 +7,7 @@ require (
 	github.com/go-playground/validator/v10 v10.24.0
 	github.com/goccy/go-json v0.10.5
 	github.com/gofiber/fiber/v2 v2.52.7
-	github.com/golang-jwt/jwt/v5 v5.2.1
+	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/sirupsen/logrus v1.9.3
 	go.mongodb.org/mongo-driver v1.17.2
 	golang.org/x/crypto v0.35.0
