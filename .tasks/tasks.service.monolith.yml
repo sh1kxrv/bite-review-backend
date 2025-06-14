@@ -1,0 +1,13 @@
+version: '3'
+
+tasks:
+  run:
+    dir: 'app/monolith'
+    cmds:
+      - go run ./main.go
+  swag:
+    dir: 'app/monolith'
+    generates:
+      - /internal/docs
+    cmds:
+      - swag init --parseDependency --output ./internal/docs
