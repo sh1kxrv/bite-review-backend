@@ -10,7 +10,7 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/sirupsen/logrus v1.9.3
 	go.mongodb.org/mongo-driver v1.17.2
-	golang.org/x/crypto v0.33.0
+	golang.org/x/crypto v0.35.0
 )
 
 require (
